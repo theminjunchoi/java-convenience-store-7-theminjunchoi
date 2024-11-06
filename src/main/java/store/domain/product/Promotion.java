@@ -1,4 +1,4 @@
-package store.model.product;
+package store.domain.product;
 
 public enum Promotion {
     SOFT_DRINK,
@@ -19,5 +19,6 @@ public enum Promotion {
         } else if (promotion.isBlank()) {
             return NO_PROMOTION;
         }
+        return NO_PROMOTION;
     }
 }

@@ -1,4 +1,4 @@
-package store.model.product;
+package store.domain.product;
 
 public class Product {
     private final String name;
@@ -11,5 +11,13 @@ public class Product {
         this.price = price;
         this.quantity = quantity;
         this.promotion = promotion;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Promotion getPromotion() {
+        return promotion;
     }
 }
