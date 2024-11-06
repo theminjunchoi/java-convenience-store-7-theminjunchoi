@@ -2,19 +2,16 @@ package store.domain.product;
 
 public enum Promotion {
     SOFT_DRINK,
-    TWO_PLUS_ONE,
     MD_RECOMMENDATION,
     FLASH_DISCOUNT,
     NO_PROMOTION;
 
     public static Promotion getPromotion(String promotion) {
-        if (promotion.equals("soft_drink")) {
+        if (promotion.equals("탄산2+1")) {
             return SOFT_DRINK;
-        } else if (promotion.equals("two_plus_one")) {
-            return TWO_PLUS_ONE;
-        } else if (promotion.equals("md_recommendation")) {
+        } else if (promotion.equals("MD추천상품")) {
             return MD_RECOMMENDATION;
-        } else if (promotion.equals("flash_discount")) {
+        } else if (promotion.equals("반짝할인")) {
             return FLASH_DISCOUNT;
         } else if (promotion.isBlank()) {
             return NO_PROMOTION;
