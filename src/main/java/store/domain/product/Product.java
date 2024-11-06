@@ -20,4 +20,9 @@ public class Product {
     public Promotion getPromotion() {
         return promotion;
     }
+
+    @Override
+    public String toString() {
+        return name + "," + price + "," + quantity + "," + promotion.toString();
+    }
 }

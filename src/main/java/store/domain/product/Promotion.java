@@ -1,3 +1,4 @@
+
 package store.domain.product;
 
 public enum Promotion {
@@ -17,5 +18,19 @@ public enum Promotion {
             return NO_PROMOTION;
         }
         return NO_PROMOTION;
+    }
+
+    @Override
+    public String toString() {
+        if (this == SOFT_DRINK) {
+            return "탄산2+1";
+        } else if (this == MD_RECOMMENDATION) {
+            return "MD추천상품";
+        } else if (this == FLASH_DISCOUNT) {
+            return "반짝할인";
+        } else if (this == NO_PROMOTION) {
+            return "null";
+        }
+        return "null";
     }
 }

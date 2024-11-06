@@ -1,5 +1,6 @@
 package store.domain.repository;
 
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.*;
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ public class TextProductRepository implements ProductRepository {
                 int price = Integer.parseInt(values[1]);
                 int quantity = Integer.parseInt(values[2]);
                 Promotion promotion= Promotion.getPromotion(values[3]);
-                save(organizeProduct(name, price, quantity, promotion));
+                add(organizeProduct(name, price, quantity, promotion));
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -35,8 +36,20 @@ public class TextProductRepository implements ProductRepository {
     }
 
     @Override
-    public void save(Product product) {
+    public void add(Product product) {
         store.add(product);
+    }
+
+    @Override
+    public void save() {
+        try(BufferedWriter writer = Files.newBufferedWriter(productsPath)) {
+            writer.write("name,price,quantity,promotion\n");
+            for(Product product : store) {
+                writer.write(product.toString() + "\n");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -54,5 +67,4 @@ public class TextProductRepository implements ProductRepository {
         }
         return null;
     }
-
 }
