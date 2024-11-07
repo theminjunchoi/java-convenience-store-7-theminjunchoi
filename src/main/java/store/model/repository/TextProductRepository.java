@@ -1,12 +1,12 @@
-package store.domain.repository;
+package store.model.repository;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.List;
-import store.domain.product.Product;
-import store.domain.product.Promotion;
+import store.model.product.Product;
+import store.model.product.Promotion;
 
 public class TextProductRepository implements ProductRepository {
     private static final Path productsPath = Paths.get("src/main/resources/products.md");

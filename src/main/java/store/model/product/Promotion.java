@@ -1,5 +1,5 @@
 
-package store.domain.product;
+package store.model.product;
 
 public enum Promotion {
     SOFT_DRINK,

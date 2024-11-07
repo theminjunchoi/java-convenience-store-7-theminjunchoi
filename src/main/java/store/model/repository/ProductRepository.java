@@ -1,7 +1,7 @@
-package store.domain.repository;
+package store.model.repository;
 
-import store.domain.product.Product;
-import store.domain.product.Promotion;
+import store.model.product.Product;
+import store.model.product.Promotion;
 
 public interface ProductRepository {
     void createRepository();
