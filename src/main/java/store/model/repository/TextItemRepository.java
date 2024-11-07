@@ -59,6 +59,17 @@ public class TextItemRepository implements ItemRepository {
     }
 
     @Override
+    public List<Item> findByName(String name) {
+        List<Item> items = new ArrayList<>();
+        for (Item item : store) {
+            if (item.getName().equals(name)) {
+                items.add(item);
+            }
+        }
+        return items;
+    }
+
+    @Override
     public Item findByNameAndPromotion(String name, Promotion promotion) {
         for (Item item : store) {
             if (item.getName().equals(name) && item.getPromotion().equals(promotion)) {
