@@ -79,6 +79,7 @@ public class TextItemRepository implements ItemRepository {
         return null;
     }
 
+    @Override
     public List<Item> getStore() {
         return store;
     }

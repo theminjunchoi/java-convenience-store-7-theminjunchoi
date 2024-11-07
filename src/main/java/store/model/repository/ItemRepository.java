@@ -12,4 +12,5 @@ public interface ItemRepository {
     void update(Item item, int quantity);
     List<Item> findByName(String name);
     Item findByNameAndPromotion(String name, Promotion promotion);
+    List<Item> getStore();
 }

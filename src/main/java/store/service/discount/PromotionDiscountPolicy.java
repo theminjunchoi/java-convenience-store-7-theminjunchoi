@@ -10,7 +10,7 @@ public class PromotionDiscountPolicy implements DiscountPolicy {
     }
 
     @Override
-    public void discount(List<Order> order) {
-
+    public int discount(int price) {
+        return 0;
     }
 }

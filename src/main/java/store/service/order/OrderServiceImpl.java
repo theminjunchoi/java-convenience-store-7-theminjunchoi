@@ -1,7 +1,6 @@
 package store.service.order;
 
 import java.util.List;
-import java.util.Optional;
 import store.model.product.Item;
 import store.model.product.Promotion;
 import store.model.repository.ItemRepository;
@@ -11,13 +10,16 @@ import store.service.discount.MembershipDiscountPolicy;
 import store.service.discount.PromotionDiscountPolicy;
 
 public class OrderServiceImpl implements OrderService {
+    private int totalDiscountPrice;
     private final ItemRepository itemRepository = new TextItemRepository();
     private final DiscountPolicy promotionDiscountPolicy = new PromotionDiscountPolicy();
     private final DiscountPolicy membershipDiscountPolicy = new MembershipDiscountPolicy();
 
     @Override
-    public Order createOrder(String name, int quantity, Promotion promotion) {
-        Item item = findByNameAndPromotion(name, promotion);
+    public Order createOrder(String name, int quantity) {
+        Item item = findByName(name).stream()
+                .findFirst().orElse(null);
+        assert item != null;
         return new Order(item, quantity, item.getPrice(), item.getPromotion());
     }
 
@@ -47,6 +49,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public void applyMembership(List<Order> orders) {
-        membershipDiscountPolicy.discount(orders);
+        //membershipDiscountPolicy.discount(orders);
     }
+
 }
