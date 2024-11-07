@@ -1,7 +1,10 @@
 package store.controller;
 
+import static store.exception.ErrorMessage.INVALID_ANSWER;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import store.model.product.Item;
 import store.model.product.Promotion;
@@ -27,8 +30,16 @@ public class ConvenienceStore {
     }
 
     public void shopping() {
+        List<Order> orders = null;
+        boolean goShopping = true;
         organizeStore();
-        purchaseProduct();
+        while (goShopping) {
+            orders = purchaseProduct();
+            isMembership(orders);
+            //showReceipt(orders);
+            goShopping = askAgain();
+        }
+
     }
 
     private void organizeStore() {
@@ -36,10 +47,10 @@ public class ConvenienceStore {
         outputView.printWelcome();
     }
 
-    private void purchaseProduct() {
+    private List<Order> purchaseProduct() {
         String rawOrders = inputView.getProductAndCount();
         List<Order> orders = makeOrders(rawOrders);
-
+        return orders;
     }
 
     private List<Order> makeOrders(String input) {
@@ -63,14 +74,14 @@ public class ConvenienceStore {
         List<Order> orders = new ArrayList<>();
         List<Item> items = orderService.findByName(name);
         if (items.size() > 1) { //promotion인 것과 아닌 게 둘 다 있음
-            addPromotionalItem(name, quantity, items, orders);
+            addTwoTypeItem(name, quantity, items, orders);
         } else if (items.size() == 1) {
-            addUnPromotionalItem(name, quantity, orders, items);
+            addOneTypeItem(name, quantity, orders, items);
         }
         return orders;
     }
 
-    private void addPromotionalItem(String name, int quantity, List<Item> items, List<Order> orders) {
+    private void addTwoTypeItem(String name, int quantity, List<Item> items, List<Order> orders) {
         int promotionQuantity = items.stream()
                 .filter(item -> item.getPromotion() != Promotion.NO_PROMOTION)
                 .mapToInt(Item::getQuantity)
@@ -87,8 +98,30 @@ public class ConvenienceStore {
         }
     }
 
-    private void addUnPromotionalItem(String name, int quantity, List<Order> orders, List<Item> items) {
+    private void addOneTypeItem(String name, int quantity, List<Order> orders, List<Item> items) {
         orders.add(orderService.createOrder(name, quantity, items.getFirst().getPromotion()));
     }
 
+    private boolean askAgain() {
+        String answer = inputView.getExtraPurchase();
+        if (!answer.equals("Y") && !answer.equals("N")) {
+            throw new IllegalArgumentException(INVALID_ANSWER.getMessage());
+        } else if (answer.equals("Y")) {
+            return true;
+        }
+        return false;
+    }
+
+    private void isMembership(List<Order> orders) {
+        String answer = inputView.getMembership();
+        if (!answer.equals("Y") && !answer.equals("N")) {
+            throw new IllegalArgumentException(INVALID_ANSWER.getMessage());
+        } else if (answer.equals("Y")) {
+            applyMembership(orders);
+        }
+    }
+
+    private void applyMembership(List<Order> orders) {
+        orderService.applyMembership(orders);
+    }
 }

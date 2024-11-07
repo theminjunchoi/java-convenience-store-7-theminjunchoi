@@ -10,5 +10,5 @@ public interface OrderService {
     List<Item> findByName(String name);
     Item findByNameAndPromotion(String name, Promotion promotion);
     boolean canOrder(String name, int quantity);
-    void checkPromotion(String name, int quantity);
+    void applyMembership(List<Order> orders);
 }

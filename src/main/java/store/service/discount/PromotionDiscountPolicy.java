@@ -1,5 +1,8 @@
 package store.service.discount;
 
+import java.util.List;
+import store.service.order.Order;
+
 public class PromotionDiscountPolicy implements DiscountPolicy {
     @Override
     public boolean isInDate() {
@@ -7,7 +10,7 @@ public class PromotionDiscountPolicy implements DiscountPolicy {
     }
 
     @Override
-    public int discount(int price) {
-        return 0;
+    public void discount(List<Order> order) {
+
     }
 }

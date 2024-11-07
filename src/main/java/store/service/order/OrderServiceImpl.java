@@ -46,7 +46,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void checkPromotion(String name, int quantity) {
-
+    public void applyMembership(List<Order> orders) {
+        membershipDiscountPolicy.discount(orders);
     }
 }

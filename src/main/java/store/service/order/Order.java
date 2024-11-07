@@ -15,5 +15,18 @@ public class Order {
         this.quantity = quantity;
         this.productPrice = productPrice;
         this.promotion = promotion;
+        this.discountPrice = 0;
+    }
+
+    public int getProductPrice() {
+        return productPrice;
+    }
+
+    public void setDiscountPrice(int discountPrice) {
+        this.discountPrice = discountPrice;
+    }
+
+    public Promotion getPromotion() {
+        return promotion;
     }
 }
