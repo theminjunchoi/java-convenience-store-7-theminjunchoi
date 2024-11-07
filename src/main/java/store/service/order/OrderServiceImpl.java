@@ -16,12 +16,8 @@ public class OrderServiceImpl implements OrderService {
     private final DiscountPolicy membershipDiscountPolicy = new MembershipDiscountPolicy();
 
     @Override
-    public Order createOrder(String name, int quantity) {
-        List<Item> findItems = findByName(name);
-        Optional<Item> promotionItem = findItems.stream()
-                .filter(findItem -> findItem.getPromotion() != Promotion.NO_PROMOTION)
-                .findAny();
-        Item item = promotionItem.orElse(findItems.getFirst());
+    public Order createOrder(String name, int quantity, Promotion promotion) {
+        Item item = findByNameAndPromotion(name, promotion);
         return new Order(item, quantity, item.getPrice(), item.getPromotion());
     }
 
@@ -36,11 +32,21 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public Item findByNameAndPromotion(String name, Promotion promotion) {
+        return itemRepository.findByNameAndPromotion(name, promotion);
+    }
+
+    @Override
     public boolean canOrder(String name, int quantity) {
         List<Item> items = findByName(name);
         int totalCount = items.stream()
                 .mapToInt(Item::getQuantity)
                 .sum();
         return quantity < totalCount && !items.isEmpty();
+    }
+
+    @Override
+    public void checkPromotion(String name, int quantity) {
+
     }
 }
