@@ -67,4 +67,8 @@ public class TextProductRepository implements ProductRepository {
         }
         return null;
     }
+
+    public List<Product> getStore() {
+        return store;
+    }
 }

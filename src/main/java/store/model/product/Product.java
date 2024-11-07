@@ -13,16 +13,28 @@ public class Product {
         this.promotion = promotion;
     }
 
+    @Override
+    public String toString() {
+        return name + "," + price + "," + quantity + "," + promotion.toString();
+    }
+
+    public String toPrintFormat() {
+        return getName() + getPrice() + getQuantity() + getPromotion();
+    }
+
     public String getName() {
         return name;
     }
 
-    public Promotion getPromotion() {
-        return promotion;
+    public int getPrice() {
+        return price;
     }
 
-    @Override
-    public String toString() {
-        return name + "," + price + "," + quantity + "," + promotion.toString();
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public Promotion getPromotion() {
+        return promotion;
     }
 }
