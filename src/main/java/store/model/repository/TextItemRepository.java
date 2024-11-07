@@ -5,12 +5,12 @@ import java.io.IOException;
 import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.List;
-import store.model.product.Product;
+import store.model.product.Item;
 import store.model.product.Promotion;
 
-public class TextProductRepository implements ProductRepository {
+public class TextItemRepository implements ItemRepository {
     private static final Path productsPath = Paths.get("src/main/resources/products.md");
-    private static final List<Product> store = new ArrayList<>();
+    private static final List<Item> store = new ArrayList<>();
 
     @Override
     public void createRepository() {
@@ -31,21 +31,21 @@ public class TextProductRepository implements ProductRepository {
     }
 
     @Override
-    public Product organizeProduct(String name, int price, int quantity, Promotion promotion) {
-        return new Product(name, price, quantity, promotion);
+    public Item organizeProduct(String name, int price, int quantity, Promotion promotion) {
+        return new Item(name, price, quantity, promotion);
     }
 
     @Override
-    public void add(Product product) {
-        store.add(product);
+    public void add(Item item) {
+        store.add(item);
     }
 
     @Override
     public void save() {
         try(BufferedWriter writer = Files.newBufferedWriter(productsPath)) {
             writer.write("name,price,quantity,promotion\n");
-            for(Product product : store) {
-                writer.write(product.toString() + "\n");
+            for(Item item : store) {
+                writer.write(item.toString() + "\n");
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -53,22 +53,22 @@ public class TextProductRepository implements ProductRepository {
     }
 
     @Override
-    public void update(Product product, int quantity) {
-        Product updateProduct = findByNameAndPromotion(product.getName(), product.getPromotion());
+    public void update(Item item, int quantity) {
+        Item updateItem = findByNameAndPromotion(item.getName(), item.getPromotion());
         // 추후 구현
     }
 
     @Override
-    public Product findByNameAndPromotion(String name, Promotion promotion) {
-        for (Product product : store) {
-            if (product.getName().equals(name) && product.getPromotion().equals(promotion)) {
-                return product;
+    public Item findByNameAndPromotion(String name, Promotion promotion) {
+        for (Item item : store) {
+            if (item.getName().equals(name) && item.getPromotion().equals(promotion)) {
+                return item;
             }
         }
         return null;
     }
 
-    public List<Product> getStore() {
+    public List<Item> getStore() {
         return store;
     }
 }

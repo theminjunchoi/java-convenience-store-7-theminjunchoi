@@ -8,9 +8,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import store.Application;
-import store.model.repository.TextProductRepository;
+import store.model.repository.TextItemRepository;
 class OutputViewTest extends NsTest {
-    TextProductRepository textProductRepository = new TextProductRepository();
+    TextItemRepository textProductRepository = new TextItemRepository();
     OutputView outputView = new OutputView();
 
     @BeforeEach
