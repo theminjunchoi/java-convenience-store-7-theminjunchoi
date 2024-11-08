@@ -16,6 +16,7 @@ public class OutputView {
     private final static String ORDER_FORMAT = "%-16s %-7d %-7s\n";
     private final static String PROMOTION_ORDER_FORMAT = "%-16s %-7d\n";
     private final static String TOTAL_PRICE_FORMAT = "%-16s %-7d %-7s\n";
+    private final static String PROMOTION_PRICE_FORMAT = "%-23s -%-7d\n";
 
     public void printWelcome() {
         System.out.println(WELCOME);
@@ -59,7 +60,11 @@ public class OutputView {
 
         System.out.println(LINE);
         System.out.printf(TOTAL_PRICE_FORMAT, "총구매액", totalQuantity, totalPrice);
-        // 행사, 멤버십 할인, 내실 돈
+        int totalPromotionPrice = promotionOrders.stream()
+                .mapToInt(promotionOrder -> promotionOrder.getProductPrice() * promotionOrder.getQuantity())
+                .sum();
+        System.out.printf(PROMOTION_PRICE_FORMAT, "행사할인", totalPromotionPrice);
+        // 멤버십 할인
 
         System.out.print(System.lineSeparator());
 

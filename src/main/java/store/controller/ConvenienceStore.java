@@ -64,10 +64,23 @@ public class ConvenienceStore {
             String name = parts[0];
             int quantity = Integer.parseInt(parts[1]);
             checkNameAndQuantity(name, quantity);
-            orders.add(orderService.createOrder(name, quantity));
+            Order newOrder = orderService.createOrder(name, quantity);
+            addPromotionOrder(newOrder);
+            orders.add(newOrder);
         }
-
         checkMoreItem();
+    }
+
+    private void addPromotionOrder(Order order) {
+        if (order.getPromotion() == Promotion.SOFT_DRINK) {
+            int promotionCount = order.getQuantity() / 3;
+            Order promotionOrder = new Order(order.getItem(), promotionCount, order.getProductPrice(), order.getPromotion());
+            promotionOrders.add(promotionOrder);
+        } else if (order.getPromotion() == Promotion.MD_RECOMMENDATION || order.getPromotion() == Promotion.FLASH_DISCOUNT) {
+            int promotionCount = order.getQuantity() / 2;
+            Order promotionOrder = new Order(order.getItem(), promotionCount, order.getProductPrice(), order.getPromotion());
+            promotionOrders.add(promotionOrder);
+        }
     }
 
     private void calculatePromotion() {
