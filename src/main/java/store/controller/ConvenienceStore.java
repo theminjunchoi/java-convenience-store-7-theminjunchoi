@@ -27,6 +27,7 @@ public class ConvenienceStore {
         this.orderService = new OrderServiceImpl();
         this.inputView = new InputView();
         this.outputView = new OutputView();
+        this.orders = new ArrayList<>();
     }
 
     public void shopping() {
@@ -34,12 +35,11 @@ public class ConvenienceStore {
         boolean isMembership;
         organizeStore();
         while (goShopping) {
-            orders = purchaseItem();
+            purchaseItem();
             isMembership = getMembership();
             showReceipt(orders, isMembership);
             goShopping = askAgain();
         }
-
     }
 
     private void organizeStore() {
@@ -48,25 +48,20 @@ public class ConvenienceStore {
         outputView.printItem(itemRepository.getStore());
     }
 
-    private List<Order> purchaseItem() {
+    private void purchaseItem() {
         String rawOrders = inputView.getProductAndCount();
-        return makeOrders(rawOrders);
+        makeOrders(rawOrders);
     }
 
-    private List<Order> makeOrders(String input) {
-        List<Order> orders = new ArrayList<>();
+    private void makeOrders(String input) {
         String[] rawOrders = input.split(",");
         for (String rawOrder : rawOrders) {
             String[] parts = rawOrder.replaceAll("[\\[\\]]", "").split("-");
-
             String name = parts[0];
             int quantity = Integer.parseInt(parts[1]);
-
             checkNameAndQuantity(name, quantity);
-
             orders.add(orderService.createOrder(name, quantity));
         }
-        return orders;
     }
 
     private void checkNameAndQuantity(String name, int quantity) {

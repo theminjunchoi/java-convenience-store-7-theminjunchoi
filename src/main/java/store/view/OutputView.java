@@ -35,6 +35,7 @@ public class OutputView {
                     quantityInfo,
                     item.getPromotion());
         }
+        System.out.print(System.lineSeparator());
     }
 
     public void printReceipt(List<Order> orders) {
@@ -54,6 +55,8 @@ public class OutputView {
         System.out.println(LINE);
         System.out.printf(TOTAL_PRICE_FORMAT, "총구매액", totalQuantity, totalPrice);
         // 행사, 멤버십 할인, 내실 돈
+
+        System.out.print(System.lineSeparator());
 
     }
 }
