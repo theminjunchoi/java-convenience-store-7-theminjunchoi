@@ -14,6 +14,7 @@ public class OutputView {
     private final static String PRESENTED = "=============증     정===============";
     private final static String LINE = "====================================";
     private final static String ORDER_FORMAT = "%-16s %-7d %-7s\n";
+    private final static String PROMOTION_ORDER_FORMAT = "%-16s %-7d\n";
     private final static String TOTAL_PRICE_FORMAT = "%-16s %-7d %-7s\n";
 
     public void printWelcome() {
@@ -38,7 +39,7 @@ public class OutputView {
         System.out.print(System.lineSeparator());
     }
 
-    public void printReceipt(List<Order> orders) {
+    public void printReceipt(List<Order> orders, List<Order> promotionOrders) {
         NumberFormat moneyFormat = NumberFormat.getInstance();
         int totalQuantity = 0;
         long totalPrice = 0;
@@ -52,6 +53,10 @@ public class OutputView {
         }
         System.out.println(PRESENTED);
         // TODO
+        for (Order promotionOrder : promotionOrders) {
+            System.out.printf(PROMOTION_ORDER_FORMAT, promotionOrder.getName(), promotionOrder.getQuantity());
+        }
+
         System.out.println(LINE);
         System.out.printf(TOTAL_PRICE_FORMAT, "총구매액", totalQuantity, totalPrice);
         // 행사, 멤버십 할인, 내실 돈
