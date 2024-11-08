@@ -16,6 +16,10 @@ public class Order {
         this.promotion = promotion;
     }
 
+    public Item getItem() {
+        return item;
+    }
+
     public String getName() {
         return item.getName();
     }

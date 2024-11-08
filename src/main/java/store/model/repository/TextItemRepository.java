@@ -83,4 +83,10 @@ public class TextItemRepository implements ItemRepository {
     public List<Item> getStore() {
         return store;
     }
+
+    @Override
+    public int getQuantityOfItem(String name, Promotion promotion) {
+        Item item = findByNameAndPromotion(name, promotion);
+        return item.getQuantity();
+    }
 }

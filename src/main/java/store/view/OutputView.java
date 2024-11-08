@@ -59,4 +59,6 @@ public class OutputView {
         System.out.print(System.lineSeparator());
 
     }
+
+
 }
