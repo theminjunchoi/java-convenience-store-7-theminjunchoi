@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import store.model.product.Item;
 import store.model.product.Promotion;
+import store.service.order.Order;
 
 public class TextItemRepository implements ItemRepository {
     private static final Path productsPath = Paths.get("src/main/resources/products.md");
@@ -88,5 +89,15 @@ public class TextItemRepository implements ItemRepository {
     public int getQuantityOfItem(String name, Promotion promotion) {
         Item item = findByNameAndPromotion(name, promotion);
         return item.getQuantity();
+    }
+
+    @Override
+    public void updateRepository(List<Order> orders) {
+        for (Order order : orders) {
+            store.stream()
+                .filter(item -> item.getName().equals(order.getItem().getName()))
+                .findFirst()
+                .ifPresent(item -> item.reduceQuantity(order.getQuantity()));
+        }
     }
 }

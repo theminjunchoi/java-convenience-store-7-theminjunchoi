@@ -41,6 +41,8 @@ public class ConvenienceStore {
             isMembership = getMembership();
             showReceipt(orders, promotionOrders, isMembership);
             goShopping = askAgain();
+            itemRepository.updateRepository(orders);
+            itemRepository.save();
         }
     }
 

@@ -8,7 +8,6 @@ public class Order {
     private int quantity;
     private final int productPrice;
     private final Promotion promotion;
-    private boolean checkPromotion;
 
     public Order(Item item, int quantity, int productPrice, Promotion promotion) {
         this.item = item;
