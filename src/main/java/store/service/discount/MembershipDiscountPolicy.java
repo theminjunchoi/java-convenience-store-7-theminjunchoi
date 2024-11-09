@@ -9,13 +9,17 @@ public class MembershipDiscountPolicy implements DiscountPolicy {
     private static final int MAX_DISCOUNT = 8000;
 
     @Override
-    public boolean isInDate() {
-        return false;
+    public boolean isInDate(Promotion promotion) {
+        return true;
     }
 
     @Override
-    public int discount(int price) {
-        int discount = (price * DISCOUNT_RATE) / 100;
-        return Math.min(discount, MAX_DISCOUNT);
+    public int discount(List<Order> orders) {
+        int noPromotionPrice = orders.stream()
+                .filter(order -> order.getPromotion().getName().equals("null"))
+                .mapToInt(order -> order.getProductPrice() * order.getQuantity())
+                .sum();
+        int totalMembershipPrice = noPromotionPrice * DISCOUNT_RATE / 100;
+        return Math.min(totalMembershipPrice, MAX_DISCOUNT);
     }
 }

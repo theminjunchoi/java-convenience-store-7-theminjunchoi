@@ -77,9 +77,7 @@ public class ConvenienceStore {
             String[] parts = rawOrder.replaceAll("[\\[\\]]", "").split("-");
             String name = parts[0];
             int quantity = Integer.parseInt(parts[1]);
-
             checkNameAndQuantity(name, quantity);
-
             Order newOrder = orderService.createOrder(name, quantity);
             orders.add(newOrder);
         }
@@ -150,7 +148,12 @@ public class ConvenienceStore {
     }
 
     private void showReceipt(List<Order> orders, List<Order> promotionOrders, boolean isMembership) {
-        outputView.printReceipt(orders, promotionOrders, isMembership);
+        int membershipDiscountPrice = 0;
+        if (isMembership) {
+            membershipDiscountPrice = orderService.applyMembership(orders);
+        }
+        int promotionDiscountPrice = orderService.applyPromotion(promotionOrders);
+        outputView.printReceipt(orders, promotionOrders, membershipDiscountPrice, promotionDiscountPrice);
     }
 
     private void askTwoPlusOne(Order order) {

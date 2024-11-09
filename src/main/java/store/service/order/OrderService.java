@@ -10,9 +10,10 @@ public interface OrderService {
     List<Item> findByName(String name);
     Item findByNameAndPromotion(String name, Promotion promotion);
     boolean canOrder(String name, int quantity);
-    void applyMembership(List<Order> orders);
     boolean isTwoPlusOneMore(Order order);
     boolean isTwoPlusOne(Order order);
     boolean isOnePlusOneMore(Order order);
     boolean isOnePlusOne(Order order);
+    int applyMembership(List<Order> orders);
+    int applyPromotion(List<Order> promotionOrders);
 }

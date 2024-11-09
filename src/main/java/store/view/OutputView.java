@@ -46,7 +46,7 @@ public class OutputView {
         System.out.println(errorMessage);
     }
 
-    public void printReceipt(List<Order> orders, List<Order> promotionOrders, boolean isMembership) {
+    public void printReceipt(List<Order> orders, List<Order> promotionOrders, int membershipDiscountPrice, int promotionDiscountPrice) {
         NumberFormat moneyFormat = NumberFormat.getInstance();
         int totalQuantity = 0;
         long totalPrice = 0;
@@ -68,22 +68,11 @@ public class OutputView {
         System.out.printf(TOTAL_PRICE_FORMAT, "총구매액", totalQuantity, totalPrice);
 
         // 행사 할인
-        int totalPromotionPrice = promotionOrders.stream()
-                .mapToInt(promotionOrder -> promotionOrder.getProductPrice() * promotionOrder.getQuantity())
-                .sum();
-        System.out.printf(PROMOTION_PRICE_FORMAT, "행사할인", totalPromotionPrice);
+        System.out.printf(PROMOTION_PRICE_FORMAT, "행사할인", promotionDiscountPrice);
 
         // 멤버십 할인
-        int totalMembershipPrice = 0;
-        if (isMembership) {
-            totalMembershipPrice = orders.stream()
-                    .filter(order -> order.getPromotion().getName().equals("no promotion"))
-                    .mapToInt(order -> order.getProductPrice() * order.getQuantity())
-                    .sum();
-            totalMembershipPrice = Math.min(totalMembershipPrice*30/100, 8000);
-        }
-        System.out.printf(MEMBERSHIP_PRICE_FORMAT, "멤버십할인", totalMembershipPrice);
-        System.out.printf(FINAL_PRICE_FORMAT, "내실돈", totalPrice-totalPromotionPrice-totalMembershipPrice);
+        System.out.printf(MEMBERSHIP_PRICE_FORMAT, "멤버십할인", membershipDiscountPrice);
+        System.out.printf(FINAL_PRICE_FORMAT, "내실돈", totalPrice-promotionDiscountPrice-membershipDiscountPrice);
         System.out.print(System.lineSeparator());
     }
 

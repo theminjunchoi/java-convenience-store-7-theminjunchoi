@@ -47,15 +47,11 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void applyMembership(List<Order> orders) {
-        //membershipDiscountPolicy.discount(orders);
-    }
-
-    @Override
     public boolean isTwoPlusOneMore(Order order) {
         return order.getPromotion().getBuy() == 2
                 && order.getPromotion().getGet() == 1
                 && order.getQuantity() % 3 == 2
+                && promotionDiscountPolicy.isInDate(order.getPromotion())
                 && (itemRepository.getQuantityOfItem(order.getName(), order.getPromotion()) - order.getQuantity()) >= 1;
     }
 
@@ -71,6 +67,7 @@ public class OrderServiceImpl implements OrderService {
         return order.getPromotion().getBuy() == 1
                 && order.getPromotion().getGet() == 1
                 && order.getQuantity() % 2 == 1
+                && promotionDiscountPolicy.isInDate(order.getPromotion())
                 && (itemRepository.getQuantityOfItem(order.getName(), order.getPromotion()) - order.getQuantity()) >= 1;
     }
 
@@ -81,4 +78,13 @@ public class OrderServiceImpl implements OrderService {
                 && order.getQuantity() % 2 == 0;
     }
 
+    @Override
+    public int applyMembership(List<Order> orders) {
+        return membershipDiscountPolicy.discount(orders);
+    }
+
+    @Override
+    public int applyPromotion(List<Order> promotionOrders) {
+        return promotionDiscountPolicy.discount(promotionOrders);
+    }
 }
