@@ -3,6 +3,7 @@ package store.model.repository;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import store.model.product.Item;
@@ -12,9 +13,12 @@ import store.service.order.Order;
 public class TextItemRepository implements ItemRepository {
     private static final Path productsPath = Paths.get("src/main/resources/products.md");
     private static final List<Item> store = new ArrayList<>();
+    private static final Path promotionsPath = Paths.get("src/main/resources/promotions.md");
+    private static final List<Promotion> promotions = new ArrayList<>();
 
     @Override
     public void createRepository() {
+        organizePromotions();
         try {
             List<String> stocks = Files.readAllLines(productsPath);
             for (int i = 1; i < stocks.size(); i++) {
@@ -23,8 +27,32 @@ public class TextItemRepository implements ItemRepository {
                 String name = values[0];
                 int price = Integer.parseInt(values[1]);
                 int quantity = Integer.parseInt(values[2]);
-                Promotion promotion= Promotion.getPromotion(values[3]);
+                Promotion promotion = promotions.stream()
+                        .filter(findPromotion -> findPromotion.getName().equals(values[3]))
+                        .findFirst()
+                        .orElse(promotions.getFirst());
                 add(organizeProduct(name, price, quantity, promotion));
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void organizePromotions() {
+        Promotion noPromotion = new Promotion("null", 0, 0, null, null);
+        promotions.add(noPromotion);
+        try {
+            List<String> rawPromotions = Files.readAllLines(promotionsPath);
+            for (int i = 1; i < rawPromotions.size(); i++) {
+                String line = rawPromotions.get(i);
+                String[] values = line.split(",");
+                String name = values[0];
+                int buy = Integer.parseInt(values[1]);
+                int get = Integer.parseInt(values[2]);
+                LocalDate startDate = LocalDate.parse(values[3]);
+                LocalDate endDate = LocalDate.parse(values[4]);
+                promotions.add(new Promotion(name, buy, get, startDate, endDate));
             }
         } catch (IOException e) {
             throw new RuntimeException(e);

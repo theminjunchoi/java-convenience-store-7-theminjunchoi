@@ -33,11 +33,15 @@ public class OutputView {
             } else {
                 quantityInfo = item.getQuantity() + "개";
             }
+            String promotion = item.getPromotion().getName();
+            if (promotion.equals("null")) {
+                promotion = "";
+            }
             System.out.printf(ITEM_CONTENTS,
                     item.getName(),
                     moneyFormat.format(item.getPrice()),
                     quantityInfo,
-                    item.getPromotion());
+                    promotion);
         }
         System.out.print(System.lineSeparator());
     }
@@ -77,7 +81,7 @@ public class OutputView {
         int totalMembershipPrice = 0;
         if (isMembership) {
             totalMembershipPrice = orders.stream()
-                    .filter(order -> order.getPromotion() == Promotion.NO_PROMOTION)
+                    .filter(order -> order.getPromotion().getName().equals("no promotion"))
                     .mapToInt(order -> order.getProductPrice() * order.getQuantity())
                     .sum();
             totalMembershipPrice = Math.min(totalMembershipPrice*30/100, 8000);

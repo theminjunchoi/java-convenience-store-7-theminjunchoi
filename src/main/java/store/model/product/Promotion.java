@@ -1,36 +1,39 @@
-
 package store.model.product;
 
-public enum Promotion {
-    SOFT_DRINK,
-    MD_RECOMMENDATION,
-    FLASH_DISCOUNT,
-    NO_PROMOTION;
+import java.time.LocalDate;
 
-    public static Promotion getPromotion(String promotion) {
-        if (promotion.equals("탄산2+1")) {
-            return SOFT_DRINK;
-        } else if (promotion.equals("MD추천상품")) {
-            return MD_RECOMMENDATION;
-        } else if (promotion.equals("반짝할인")) {
-            return FLASH_DISCOUNT;
-        } else if (promotion.isBlank()) {
-            return NO_PROMOTION;
-        }
-        return NO_PROMOTION;
+public class Promotion {
+    private final String name;
+    private final int buy;
+    private final int get;
+    private final LocalDate startDate;
+    private final LocalDate endDate;
+
+    public Promotion(String name, int buy, int get, LocalDate startDate, LocalDate endDate) {
+        this.name = name;
+        this.buy = buy;
+        this.get = get;
+        this.startDate = startDate;
+        this.endDate = endDate;
     }
 
-    @Override
-    public String toString() {
-        if (this == SOFT_DRINK) {
-            return "탄산2+1";
-        } else if (this == MD_RECOMMENDATION) {
-            return "MD추천상품";
-        } else if (this == FLASH_DISCOUNT) {
-            return "반짝할인";
-        } else if (this == NO_PROMOTION) {
-            return null;
-        }
-        return null;
+    public String getName() {
+        return name;
+    }
+
+    public int getBuy() {
+        return buy;
+    }
+
+    public int getGet() {
+        return get;
+    }
+
+    public LocalDate getStartDate() {
+        return startDate;
+    }
+
+    public LocalDate getEndDate() {
+        return endDate;
     }
 }

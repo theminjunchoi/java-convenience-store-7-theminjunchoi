@@ -53,27 +53,31 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public boolean isTwoPlusOneMore(Order order) {
-        return order.getPromotion() == Promotion.SOFT_DRINK
+        return order.getPromotion().getBuy() == 2
+                && order.getPromotion().getGet() == 1
                 && order.getQuantity() % 3 == 2
                 && (itemRepository.getQuantityOfItem(order.getName(), order.getPromotion()) - order.getQuantity()) >= 1;
     }
 
     @Override
     public boolean isTwoPlusOne(Order order) {
-        return order.getPromotion() == Promotion.SOFT_DRINK
+        return order.getPromotion().getBuy() == 2
+                && order.getPromotion().getGet() == 1
                 && order.getQuantity() % 3 == 0;
     }
 
     @Override
     public boolean isOnePlusOneMore(Order order) {
-        return (order.getPromotion() == Promotion.MD_RECOMMENDATION || order.getPromotion() == Promotion.FLASH_DISCOUNT)
+        return order.getPromotion().getBuy() == 1
+                && order.getPromotion().getGet() == 1
                 && order.getQuantity() % 2 == 1
                 && (itemRepository.getQuantityOfItem(order.getName(), order.getPromotion()) - order.getQuantity()) >= 1;
     }
 
     @Override
     public boolean isOnePlusOne(Order order) {
-        return (order.getPromotion() == Promotion.MD_RECOMMENDATION || order.getPromotion() == Promotion.FLASH_DISCOUNT)
+        return order.getPromotion().getBuy() == 1
+                && order.getPromotion().getGet() == 1
                 && order.getQuantity() % 2 == 0;
     }
 
