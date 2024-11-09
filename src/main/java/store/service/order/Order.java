@@ -15,7 +15,6 @@ public class Order {
         this.quantity = quantity;
         this.productPrice = productPrice;
         this.promotion = promotion;
-        this.checkPromotion = false;
     }
 
     public Item getItem() {
@@ -40,13 +39,5 @@ public class Order {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
-    }
-
-    public void setCheckPromotion(boolean checkPromotion) {
-        this.checkPromotion = checkPromotion;
-    }
-
-    public boolean getCheckPromotion() {
-        return checkPromotion;
     }
 }

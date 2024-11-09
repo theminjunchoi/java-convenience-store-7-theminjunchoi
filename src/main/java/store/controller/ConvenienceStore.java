@@ -6,9 +6,7 @@ import static store.exception.ErrorMessage.OVER_QUANTITY;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import store.model.product.Item;
-import store.model.product.Promotion;
 import store.model.repository.ItemRepository;
 import store.model.repository.TextItemRepository;
 import store.service.order.Order;
@@ -24,26 +22,32 @@ public class ConvenienceStore {
     private final OutputView outputView;
     private List<Order> orders;
     private List<Order> promotionOrders;
+    private boolean isMembership;
 
     public ConvenienceStore() {
         this.itemRepository = new TextItemRepository();
         this.orderService = new OrderServiceImpl();
         this.inputView = new InputView();
         this.outputView = new OutputView();
-        this.orders = new ArrayList<>();
-        this.promotionOrders = new ArrayList<>();
     }
 
     public void shopping() {
         boolean goShopping = true;
-        boolean isMembership;
         organizeStore();
         while (goShopping) {
+            organizeStore();
+            initializeOrder();
             purchaseItem();
             isMembership = getMembership();
             showReceipt(orders, promotionOrders, isMembership);
             goShopping = askAgain();
         }
+    }
+
+    private void initializeOrder() {
+        this.orders = new ArrayList<>();
+        this.promotionOrders = new ArrayList<>();
+        this.isMembership = false;
     }
 
     private void organizeStore() {
@@ -55,6 +59,7 @@ public class ConvenienceStore {
     private void purchaseItem() {
         String rawOrders = inputView.getProductAndCount();
         makeOrders(rawOrders);
+        checkMoreItem();
     }
 
     private void makeOrders(String input) {
@@ -63,60 +68,24 @@ public class ConvenienceStore {
             String[] parts = rawOrder.replaceAll("[\\[\\]]", "").split("-");
             String name = parts[0];
             int quantity = Integer.parseInt(parts[1]);
+
             checkNameAndQuantity(name, quantity);
+
             Order newOrder = orderService.createOrder(name, quantity);
-            addPromotionOrder(newOrder);
             orders.add(newOrder);
-        }
-        checkMoreItem();
-    }
-
-    private void addPromotionOrder(Order order) {
-        if (order.getPromotion() == Promotion.SOFT_DRINK) {
-            int promotionCount = order.getQuantity() / 3;
-            Order promotionOrder = new Order(order.getItem(), promotionCount, order.getProductPrice(), order.getPromotion());
-            promotionOrders.add(promotionOrder);
-        } else if (order.getPromotion() == Promotion.MD_RECOMMENDATION || order.getPromotion() == Promotion.FLASH_DISCOUNT) {
-            int promotionCount = order.getQuantity() / 2;
-            Order promotionOrder = new Order(order.getItem(), promotionCount, order.getProductPrice(), order.getPromotion());
-            promotionOrders.add(promotionOrder);
-        }
-    }
-
-    private void calculatePromotion() {
-        for (Order order : orders) {
-            if (!order.getCheckPromotion()) {
-                int quantity = orders.stream()
-                        .filter(promotionOrder -> promotionOrder.getName().equals(order.getName()))
-                        .map(Order::getQuantity)
-                        .findFirst()
-                        .orElse(0);
-                if (order.getPromotion() == Promotion.SOFT_DRINK) {
-                    int promotionItemCount = quantity / 3 + 1;
-                    promotionOrders.add(new Order(order.getItem(), promotionItemCount, order.getProductPrice(), order.getPromotion()));
-                } else if (order.getPromotion() == Promotion.MD_RECOMMENDATION || order.getPromotion() == Promotion.FLASH_DISCOUNT) {
-                    int promotionItemCount = quantity / 2 + 1;
-                    promotionOrders.add(new Order(order.getItem(), promotionItemCount, order.getProductPrice(), order.getPromotion()));
-                }
-                order.setCheckPromotion(true);
-            }
-
         }
     }
 
     private void checkMoreItem() {
         for (Order order : orders) {
-            if(!order.getCheckPromotion()) {
-                if (order.getPromotion() == Promotion.SOFT_DRINK && order.getQuantity() % 3 == 2 && (itemRepository.getQuantityOfItem(order.getName(), order.getPromotion()) - order.getQuantity()) >= 1) {
-                    // plus 1
-                    askPlusOne(order);
-                } else if (order.getPromotion() == Promotion.MD_RECOMMENDATION && order.getQuantity() % 2 == 1  && (itemRepository.getQuantityOfItem(order.getName(), order.getPromotion()) - order.getQuantity()) >= 1) {
-                    // plus 1
-                    askPlusOne(order);
-                } else if (order.getPromotion() == Promotion.FLASH_DISCOUNT && order.getQuantity() % 2 == 1  && (itemRepository.getQuantityOfItem(order.getName(), order.getPromotion()) - order.getQuantity()) >= 1) {
-                    // plus 1
-                    askPlusOne(order);
-                }
+            if (orderService.isTwoPlusOneMore(order)) {
+                askTwoPlusOne(order);
+            } else if (orderService.isOnePlusOneMore(order)) {
+                askOnePlusOne(order);
+            } else if (orderService.isTwoPlusOne(order)) {
+                promotionOrders.add(new Order(order.getItem(), order.getQuantity()/3, order.getProductPrice(), order.getPromotion()));
+            } else if (orderService.isOnePlusOne(order)) {
+                promotionOrders.add(new Order(order.getItem(), order.getQuantity()/2, order.getProductPrice(), order.getPromotion()));
             }
         }
     }
@@ -153,22 +122,34 @@ public class ConvenienceStore {
     }
 
     private void showReceipt(List<Order> orders, List<Order> promotionOrders, boolean isMembership) {
-        outputView.printReceipt(orders, promotionOrders);
+        outputView.printReceipt(orders, promotionOrders, isMembership);
     }
 
-    private void askPlusOne(Order order) {
+    private void askTwoPlusOne(Order order) {
         String answer = inputView.getMoreItemAndCount(order.getName());
         if (!answer.equals("Y") && !answer.equals("N")) {
             throw new IllegalArgumentException(INVALID_ANSWER.getMessage());
         } else if (answer.equals("Y")) {
-            calculatePromotion();
-//            Optional<Integer> quantity = promotionOrders.stream()
-//                    .filter(promotionOrder -> promotionOrder.getName().equals(order.getName()))
-//                    .map(Order::getQuantity)
-//                    .findFirst();
-//            promotionOrders.stream()
-//                    .filter(promotionOrder -> promotionOrder.getName().equals(order.getName()))
-//                    .forEach(promotionOrder -> promotionOrder.setQuantity(quantity.orElse(0)+1));
+            orders.stream()
+                    .filter(findOrder -> findOrder.getName().equals(order.getName()))
+                    .findFirst()
+                    .ifPresent(findOrder -> findOrder.setQuantity(findOrder.getQuantity() + 1));
+            promotionOrders.add(new Order(order.getItem(), order.getQuantity()/3, order.getProductPrice(), order.getPromotion()));
         }
     }
+
+    private void askOnePlusOne(Order order) {
+        String answer = inputView.getMoreItemAndCount(order.getName());
+        if (!answer.equals("Y") && !answer.equals("N")) {
+            throw new IllegalArgumentException(INVALID_ANSWER.getMessage());
+        } else if (answer.equals("Y")) {
+            orders.stream()
+                    .filter(findOrder -> findOrder.getName().equals(order.getName()))
+                    .findFirst()
+                    .ifPresent(findOrder -> findOrder.setQuantity(findOrder.getQuantity() + 1));
+            promotionOrders.add(new Order(order.getItem(), order.getQuantity()/2, order.getProductPrice(), order.getPromotion()));
+        }
+    }
+
+
 }
