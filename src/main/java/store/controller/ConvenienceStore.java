@@ -34,16 +34,21 @@ public class ConvenienceStore {
 
     public void shopping() {
         boolean goShopping = true;
+        organizeStore();
         while (goShopping) {
-            organizeStore();
+            showStore();
             initializeOrder();
             purchaseItem();
             isMembership = getMembership();
             showReceipt(orders, promotionOrders, isMembership);
             goShopping = askAgain();
             itemRepository.updateRepository(orders);
-            itemRepository.save();
         }
+    }
+
+    private void showStore() {
+        outputView.printWelcome();
+        outputView.printItem(itemRepository.getStore());
     }
 
     private void initializeOrder() {
@@ -54,8 +59,6 @@ public class ConvenienceStore {
 
     private void organizeStore() {
         itemRepository.createRepository();
-        outputView.printWelcome();
-        outputView.printItem(itemRepository.getStore());
     }
 
     private void purchaseItem() {

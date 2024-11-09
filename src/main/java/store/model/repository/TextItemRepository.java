@@ -14,12 +14,14 @@ import store.service.order.Order;
 
 public class TextItemRepository implements ItemRepository {
     private static final Path productsPath = Paths.get("src/main/resources/products.md");
-    private static final List<Item> store = new ArrayList<>();
+    private static  List<Item> store;
     private static final Path promotionsPath = Paths.get("src/main/resources/promotions.md");
-    private static final List<Promotion> promotions = new ArrayList<>();
+    private static  List<Promotion> promotions;
 
     @Override
     public void createRepository() {
+        store = new ArrayList<>();
+        promotions = new ArrayList<>();
         organizePromotions();
         try {
             List<String> stocks = Files.readAllLines(productsPath);
