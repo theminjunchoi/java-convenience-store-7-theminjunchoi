@@ -48,33 +48,57 @@ public class OutputView {
 
     public void printReceipt(List<Order> orders, List<Order> promotionOrders, int membershipDiscountPrice, int promotionDiscountPrice) {
         NumberFormat moneyFormat = NumberFormat.getInstance();
+        printHeaders();
         int totalQuantity = 0;
         long totalPrice = 0;
-        System.out.println(RECEIPT_HEADER_1);
-        System.out.printf(RECEIPT_HEADER_2, "상품명", "수량", "금액");
         for (Order order : orders) {
             totalQuantity += order.getQuantity();
             int eachPrice = order.getProductPrice() * order.getQuantity();
             totalPrice += eachPrice;
             System.out.printf(ORDER_FORMAT, order.getName(), order.getQuantity(), moneyFormat.format(eachPrice));
         }
+        printBody(promotionOrders, membershipDiscountPrice, promotionDiscountPrice, totalQuantity, moneyFormat,
+                totalPrice);
+    }
 
+    private static void printHeaders() {
+        System.out.println(RECEIPT_HEADER_1);
+        System.out.printf(RECEIPT_HEADER_2, "상품명", "수량", "금액");
+    }
+
+    private static void printBody(List<Order> promotionOrders, int membershipDiscountPrice, int promotionDiscountPrice,
+                                  int totalQuantity, NumberFormat moneyFormat, long totalPrice) {
+        printPresentedItems(promotionOrders);
+        printBeforeDiscount(totalQuantity, moneyFormat, totalPrice);
+        printPromotionDiscountPrice(promotionDiscountPrice, moneyFormat);
+        printMembershipDiscountPrice(membershipDiscountPrice, moneyFormat);
+        printFinalPrice(membershipDiscountPrice, promotionDiscountPrice, moneyFormat, totalPrice);
+    }
+
+    private static void printPresentedItems(List<Order> promotionOrders) {
         System.out.println(PRESENTED);
         for (Order promotionOrder : promotionOrders) {
             System.out.printf(PROMOTION_ORDER_FORMAT, promotionOrder.getName(), promotionOrder.getQuantity());
         }
-
         System.out.println(LINE);
-        System.out.printf(TOTAL_PRICE_FORMAT, "총구매액", totalQuantity, moneyFormat.format(totalPrice));
-
-        // 행사 할인
-        System.out.printf(PROMOTION_PRICE_FORMAT, "행사할인", moneyFormat.format(promotionDiscountPrice));
-
-        // 멤버십 할인
-        System.out.printf(MEMBERSHIP_PRICE_FORMAT, "멤버십할인", moneyFormat.format(membershipDiscountPrice));
-        System.out.printf(FINAL_PRICE_FORMAT, "내실돈", moneyFormat.format(totalPrice-promotionDiscountPrice-membershipDiscountPrice));
-        System.out.print(System.lineSeparator());
     }
 
+    private static void printBeforeDiscount(int totalQuantity, NumberFormat moneyFormat, long totalPrice) {
+        System.out.printf(TOTAL_PRICE_FORMAT, "총구매액", totalQuantity, moneyFormat.format(totalPrice));
+    }
 
+    private static void printPromotionDiscountPrice(int promotionDiscountPrice, NumberFormat moneyFormat) {
+        System.out.printf(PROMOTION_PRICE_FORMAT, "행사할인", moneyFormat.format(promotionDiscountPrice));
+    }
+
+    private static void printMembershipDiscountPrice(int membershipDiscountPrice, NumberFormat moneyFormat) {
+        System.out.printf(MEMBERSHIP_PRICE_FORMAT, "멤버십할인", moneyFormat.format(membershipDiscountPrice));
+    }
+
+    private static void printFinalPrice(int membershipDiscountPrice, int promotionDiscountPrice, NumberFormat moneyFormat,
+                                        long totalPrice) {
+        System.out.printf(FINAL_PRICE_FORMAT, "내실돈", moneyFormat.format(
+                totalPrice - promotionDiscountPrice - membershipDiscountPrice));
+        System.out.print(System.lineSeparator());
+    }
 }
