@@ -22,20 +22,23 @@ public class TextItemRepository implements ItemRepository {
         try {
             List<String> stocks = Files.readAllLines(productsPath);
             for (int i = 1; i < stocks.size(); i++) {
-                String line = stocks.get(i);
-                String[] values = line.split(",");
-                String name = values[0];
-                int price = Integer.parseInt(values[1]);
-                int quantity = Integer.parseInt(values[2]);
-                Promotion promotion = promotions.stream()
-                        .filter(findPromotion -> findPromotion.getName().equals(values[3]))
-                        .findFirst()
-                        .orElse(null);
-                add(organizeProduct(name, price, quantity, promotion));
+                add(makeItem(stocks.get(i)));
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private Item makeItem (String line) {
+        String[] values = line.split(",");
+        String name = values[0];
+        int price = Integer.parseInt(values[1]);
+        int quantity = Integer.parseInt(values[2]);
+        Promotion promotion = promotions.stream()
+                .filter(findPromotion -> findPromotion.getName().equals(values[3]))
+                .findFirst()
+                .orElse(null);
+        return organizeItem(name, price, quantity, promotion);
     }
 
     @Override
@@ -45,22 +48,25 @@ public class TextItemRepository implements ItemRepository {
         try {
             List<String> rawPromotions = Files.readAllLines(promotionsPath);
             for (int i = 1; i < rawPromotions.size(); i++) {
-                String line = rawPromotions.get(i);
-                String[] values = line.split(",");
-                String name = values[0];
-                int buy = Integer.parseInt(values[1]);
-                int get = Integer.parseInt(values[2]);
-                LocalDate startDate = LocalDate.parse(values[3]);
-                LocalDate endDate = LocalDate.parse(values[4]);
-                promotions.add(new Promotion(name, buy, get, startDate, endDate));
+                promotions.add(makePromotion(rawPromotions.get(i)));
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
+    private Promotion makePromotion(String line) {
+        String[] values = line.split(",");
+        String name = values[0];
+        int buy = Integer.parseInt(values[1]);
+        int get = Integer.parseInt(values[2]);
+        LocalDate startDate = LocalDate.parse(values[3]);
+        LocalDate endDate = LocalDate.parse(values[4]);
+        return new Promotion(name, buy, get, startDate, endDate);
+    }
+
     @Override
-    public Item organizeProduct(String name, int price, int quantity, Promotion promotion) {
+    public Item organizeItem(String name, int price, int quantity, Promotion promotion) {
         return new Item(name, price, quantity, promotion);
     }
 

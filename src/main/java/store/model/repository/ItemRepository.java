@@ -8,7 +8,7 @@ import store.service.order.Order;
 public interface ItemRepository {
     void createRepository();
     void organizePromotions();
-    Item organizeProduct(String name, int price, int quantity, Promotion promotion);
+    Item organizeItem(String name, int price, int quantity, Promotion promotion);
     void add(Item item);
     void save();
     List<Item> findByName(String name);
