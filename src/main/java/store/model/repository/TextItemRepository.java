@@ -30,7 +30,7 @@ public class TextItemRepository implements ItemRepository {
                 Promotion promotion = promotions.stream()
                         .filter(findPromotion -> findPromotion.getName().equals(values[3]))
                         .findFirst()
-                        .orElse(promotions.getFirst());
+                        .orElse(null);
                 add(organizeProduct(name, price, quantity, promotion));
             }
         } catch (IOException e) {
@@ -80,12 +80,6 @@ public class TextItemRepository implements ItemRepository {
             throw new RuntimeException(e);
         }
         store.clear();
-    }
-
-    @Override
-    public void update(Item item, int quantity) {
-        Item updateItem = findByNameAndPromotion(item.getName(), item.getPromotion());
-        // 추후 구현
     }
 
     @Override

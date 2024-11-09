@@ -11,7 +11,6 @@ public interface ItemRepository {
     Item organizeProduct(String name, int price, int quantity, Promotion promotion);
     void add(Item item);
     void save();
-    void update(Item item, int quantity);
     List<Item> findByName(String name);
     Item findByNameAndPromotion(String name, Promotion promotion);
     List<Item> getStore();

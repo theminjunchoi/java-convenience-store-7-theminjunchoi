@@ -37,11 +37,7 @@ public class OutputView {
             if (promotion.equals("null")) {
                 promotion = "";
             }
-            System.out.printf(ITEM_CONTENTS,
-                    item.getName(),
-                    moneyFormat.format(item.getPrice()),
-                    quantityInfo,
-                    promotion);
+            System.out.printf(ITEM_CONTENTS, item.getName(), moneyFormat.format(item.getPrice()), quantityInfo, promotion);
         }
         System.out.print(System.lineSeparator());
     }
