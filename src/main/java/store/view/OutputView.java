@@ -16,9 +16,9 @@ public class OutputView {
     private final static String ORDER_FORMAT = "%-16s %-7d %-7s\n";
     private final static String PROMOTION_ORDER_FORMAT = "%-16s %-7d\n";
     private final static String TOTAL_PRICE_FORMAT = "%-16s %-7d %-7s\n";
-    private final static String PROMOTION_PRICE_FORMAT = "%-23s -%-7d\n";
-    private final static String MEMBERSHIP_PRICE_FORMAT = "%-23s -%-7d\n";
-    private final static String FINAL_PRICE_FORMAT = "%-23s %-7d\n";
+    private final static String PROMOTION_PRICE_FORMAT = "%-23s -%-7s\n";
+    private final static String MEMBERSHIP_PRICE_FORMAT = "%-23s -%-7s\n";
+    private final static String FINAL_PRICE_FORMAT = "%-23s %-7s\n";
 
     public void printWelcome() {
         System.out.println(WELCOME);
@@ -65,14 +65,14 @@ public class OutputView {
         }
 
         System.out.println(LINE);
-        System.out.printf(TOTAL_PRICE_FORMAT, "총구매액", totalQuantity, totalPrice);
+        System.out.printf(TOTAL_PRICE_FORMAT, "총구매액", totalQuantity, moneyFormat.format(totalPrice));
 
         // 행사 할인
-        System.out.printf(PROMOTION_PRICE_FORMAT, "행사할인", promotionDiscountPrice);
+        System.out.printf(PROMOTION_PRICE_FORMAT, "행사할인", moneyFormat.format(promotionDiscountPrice));
 
         // 멤버십 할인
-        System.out.printf(MEMBERSHIP_PRICE_FORMAT, "멤버십할인", membershipDiscountPrice);
-        System.out.printf(FINAL_PRICE_FORMAT, "내실돈", totalPrice-promotionDiscountPrice-membershipDiscountPrice);
+        System.out.printf(MEMBERSHIP_PRICE_FORMAT, "멤버십할인", moneyFormat.format(membershipDiscountPrice));
+        System.out.printf(FINAL_PRICE_FORMAT, "내실돈", moneyFormat.format(totalPrice-promotionDiscountPrice-membershipDiscountPrice));
         System.out.print(System.lineSeparator());
     }
 

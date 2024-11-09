@@ -59,7 +59,8 @@ public class OrderServiceImpl implements OrderService {
     public boolean isTwoPlusOne(Order order) {
         return order.getPromotion().getBuy() == 2
                 && order.getPromotion().getGet() == 1
-                && order.getQuantity() % 3 == 0;
+                && order.getQuantity() % 3 == 0
+                && promotionDiscountPolicy.isInDate(order.getPromotion());
     }
 
     @Override
@@ -75,7 +76,8 @@ public class OrderServiceImpl implements OrderService {
     public boolean isOnePlusOne(Order order) {
         return order.getPromotion().getBuy() == 1
                 && order.getPromotion().getGet() == 1
-                && order.getQuantity() % 2 == 0;
+                && order.getQuantity() % 2 == 0
+                && promotionDiscountPolicy.isInDate(order.getPromotion());
     }
 
     @Override
