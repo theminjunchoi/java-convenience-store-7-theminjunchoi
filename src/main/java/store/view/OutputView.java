@@ -18,7 +18,7 @@ public class OutputView {
     private final static String TOTAL_PRICE_FORMAT = "%-16s %-7d %-7s\n";
     private final static String PROMOTION_PRICE_FORMAT = "%-23s -%-7d\n";
     private final static String MEMBERSHIP_PRICE_FORMAT = "%-23s -%-7d\n";
-    private final static String FINAL_PRICE_FORMAT = "%-23s -%-7d\n";
+    private final static String FINAL_PRICE_FORMAT = "%-23s %-7d\n";
 
     public void printWelcome() {
         System.out.println(WELCOME);
@@ -40,6 +40,10 @@ public class OutputView {
                     item.getPromotion());
         }
         System.out.print(System.lineSeparator());
+    }
+
+    public void printErrorMessage(String errorMessage) {
+        System.out.println(errorMessage);
     }
 
     public void printReceipt(List<Order> orders, List<Order> promotionOrders, boolean isMembership) {

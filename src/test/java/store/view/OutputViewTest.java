@@ -22,7 +22,7 @@ class OutputViewTest extends NsTest {
     @DisplayName("Repository 현황 출력하기")
     void printProduct_Test() {
         assertSimpleTest(() -> {
-            outputView.printProduct(textProductRepository.getStore());
+            outputView.printItem(textProductRepository.getStore());
             assertThat(output()).contains(
                     "- 콜라 1,000원 10개 탄산2+1",
                     "- 콜라 1,000원 10개",

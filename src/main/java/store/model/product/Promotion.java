@@ -29,8 +29,8 @@ public enum Promotion {
         } else if (this == FLASH_DISCOUNT) {
             return "반짝할인";
         } else if (this == NO_PROMOTION) {
-            return "";
+            return null;
         }
-        return "";
+        return null;
     }
 }

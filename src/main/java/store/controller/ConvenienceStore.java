@@ -1,6 +1,7 @@
 package store.controller;
 
 import static store.exception.ErrorMessage.INVALID_ANSWER;
+import static store.exception.ErrorMessage.INVALID_ORDER;
 import static store.exception.ErrorMessage.NO_EXIST_ITEM;
 import static store.exception.ErrorMessage.OVER_QUANTITY;
 
@@ -33,7 +34,6 @@ public class ConvenienceStore {
 
     public void shopping() {
         boolean goShopping = true;
-        organizeStore();
         while (goShopping) {
             organizeStore();
             initializeOrder();
@@ -59,12 +59,19 @@ public class ConvenienceStore {
     }
 
     private void purchaseItem() {
-        String rawOrders = inputView.getProductAndCount();
-        makeOrders(rawOrders);
+        while(true) {
+            try {
+                String rawOrders = inputView.getProductAndCount();
+                makeOrders(rawOrders);
+                break;
+            } catch (ArrayIndexOutOfBoundsException e) {
+                outputView.printErrorMessage(INVALID_ORDER.getMessage());
+            }
+        }
         checkMoreItem();
     }
 
-    private void makeOrders(String input) {
+    private void makeOrders(String input) throws ArrayIndexOutOfBoundsException {
         String[] rawOrders = input.split(",");
         for (String rawOrder : rawOrders) {
             String[] parts = rawOrder.replaceAll("[\\[\\]]", "").split("-");
@@ -95,26 +102,45 @@ public class ConvenienceStore {
     private void checkNameAndQuantity(String name, int quantity) {
         List<Item> items = orderService.findByName(name);
         if (items.isEmpty()) {
-            throw new IllegalArgumentException(NO_EXIST_ITEM.getMessage());
+            outputView.printErrorMessage(NO_EXIST_ITEM.getMessage());
+            purchaseItem();
         }
         int totalQuantity = items.stream().mapToInt(Item::getQuantity).sum();
         if (quantity > totalQuantity) {
-            throw new IllegalArgumentException(OVER_QUANTITY.getMessage());
+            outputView.printErrorMessage(OVER_QUANTITY.getMessage());
+            purchaseItem();
         }
     }
 
     private boolean getMembership() {
-        String answer = inputView.getMembership();
-        if (!answer.equals("Y") && !answer.equals("N")) {
-            throw new IllegalArgumentException(INVALID_ANSWER.getMessage());
-        } else if (answer.equals("Y")) {
-            return true;
+        boolean answerToYOrN;
+        while (true) {
+            try {
+                String answer = inputView.getMembership();
+                answerToYOrN = getYOrN(answer);
+                break;
+            } catch (IllegalArgumentException e) {
+                outputView.printErrorMessage(e.getMessage());
+            }
         }
-        return false;
+        return answerToYOrN;
     }
 
     private boolean askAgain() {
-        String answer = inputView.getExtraPurchase();
+        boolean answerToYOrN;
+        while (true) {
+            try {
+                String answer = inputView.getExtraPurchase();
+                answerToYOrN = getYOrN(answer);
+                break;
+            } catch (IllegalArgumentException e) {
+                outputView.printErrorMessage(e.getMessage());
+            }
+        }
+        return answerToYOrN;
+    }
+
+    private boolean getYOrN(String answer) {
         if (!answer.equals("Y") && !answer.equals("N")) {
             throw new IllegalArgumentException(INVALID_ANSWER.getMessage());
         } else if (answer.equals("Y")) {
@@ -152,6 +178,5 @@ public class ConvenienceStore {
             promotionOrders.add(new Order(order.getItem(), order.getQuantity()/2, order.getProductPrice(), order.getPromotion()));
         }
     }
-
 
 }

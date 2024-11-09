@@ -51,6 +51,7 @@ public class TextItemRepository implements ItemRepository {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+        store.clear();
     }
 
     @Override
