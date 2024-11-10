@@ -7,6 +7,7 @@ import static store.exception.ErrorMessage.OVER_QUANTITY;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 import java.util.stream.IntStream;
 import store.model.item.Item;
 import store.model.item.Promotion;
@@ -187,31 +188,23 @@ public class ConvenienceStore {
     }
 
     private boolean getMembership() {
-        boolean answerToYOrN;
-        while (true) {
-            try {
-                String answer = inputView.getMembership();
-                answerToYOrN = getYOrN(answer);
-                break;
-            } catch (IllegalArgumentException e) {
-                outputView.printErrorMessage(e.getMessage());
-            }
-        }
-        return answerToYOrN;
+        return getUserConfirmation(inputView::getMembership);
     }
 
     private boolean askAgain() {
-        boolean answerToYOrN;
+        return getUserConfirmation(inputView::getExtraPurchase);
+
+    }
+
+    private boolean getUserConfirmation(Supplier<String> inputMethod) {
         while (true) {
             try {
-                String answer = inputView.getExtraPurchase();
-                answerToYOrN = getYOrN(answer);
-                break;
+                String answer = inputMethod.get();
+                return getYOrN(answer);
             } catch (IllegalArgumentException e) {
                 outputView.printErrorMessage(e.getMessage());
             }
         }
-        return answerToYOrN;
     }
 
     private boolean getYOrN(String answer) {
