@@ -6,10 +6,8 @@ import store.model.product.Promotion;
 
 public interface OrderService {
     Order createOrder(String name, int quantity);
-    Order useMembership(List<Order> orders);
+    Order createOrderWithPromotion(String name, int quantity, Promotion promotion);
     List<Item> findByName(String name);
-    Item findByNameAndPromotion(String name, Promotion promotion);
-    boolean canOrder(String name, int quantity);
     boolean isTwoPlusOneMore(Order order);
     boolean isTwoPlusOne(Order order);
     boolean isOnePlusOneMore(Order order);

@@ -125,10 +125,34 @@ public class TextItemRepository implements ItemRepository {
     @Override
     public void updateRepository(List<Order> orders) {
         for (Order order : orders) {
-            store.stream()
-                .filter(item -> item.getName().equals(order.getItem().getName()))
-                .findFirst()
-                .ifPresent(item -> item.reduceQuantity(order.getQuantity()));
+            int remainingQuantity = order.getQuantity();
+            String itemName = order.getItem().getName();
+
+            remainingQuantity = reduceQuantity(itemName, remainingQuantity, false);
+
+            if (remainingQuantity > 0) {
+                remainingQuantity = reduceQuantity(itemName, remainingQuantity, true);
+            }
+
+
+//            store.stream()
+//                .filter(item -> item.getName().equals(order.getItem().getName()))
+//                .findFirst()
+//                .ifPresent(item -> item.reduceQuantity(order.getQuantity()));
         }
+    }
+
+    private int reduceQuantity(String itemName, int remainingQuantity, boolean isNoPromotion) {
+        for (Item item : store.stream().filter(item -> item.getName().equals(itemName) & (isNoPromotion == item.getPromotion().equals("null"))).toList()) {
+            int itemQuantity = item.getQuantity();
+            if (itemQuantity >= remainingQuantity) {
+                item.setQuantity(itemQuantity - remainingQuantity);
+                return 0;
+            } else if (itemQuantity < remainingQuantity) {
+                item.setQuantity(0);
+                remainingQuantity -= itemQuantity;
+            }
+        }
+        return remainingQuantity;
     }
 }

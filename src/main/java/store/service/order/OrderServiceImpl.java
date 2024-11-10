@@ -17,14 +17,18 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order createOrder(String name, int quantity) {
         Item item = findByName(name).stream()
-                .findFirst().orElse(null);
+                .findFirst()
+                .orElse(null);
         assert item != null;
         return new Order(item, quantity, item.getPrice(), item.getPromotion());
     }
 
     @Override
-    public Order useMembership(List<Order> orders) {
-        return null;
+    public Order createOrderWithPromotion(String name, int quantity, Promotion promotion) {
+        Item item = findByName(name).stream()
+                .findFirst().orElse(null);
+        assert item != null;
+        return new Order(item, quantity, item.getPrice(), item.getPromotion());
     }
 
     @Override
@@ -33,22 +37,9 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Item findByNameAndPromotion(String name, Promotion promotion) {
-        return itemRepository.findByNameAndPromotion(name, promotion);
-    }
-
-    @Override
-    public boolean canOrder(String name, int quantity) {
-        List<Item> items = findByName(name);
-        int totalCount = items.stream()
-                .mapToInt(Item::getQuantity)
-                .sum();
-        return quantity < totalCount && !items.isEmpty();
-    }
-
-    @Override
     public boolean isTwoPlusOneMore(Order order) {
-        return order.getPromotion().getBuy() == 2
+        return !order.getCheckMore()
+                && order.getPromotion().getBuy() == 2
                 && order.getPromotion().getGet() == 1
                 && order.getQuantity() % 3 == 2
                 && promotionDiscountPolicy.isInDate(order.getPromotion())
@@ -57,7 +48,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public boolean isTwoPlusOne(Order order) {
-        return order.getPromotion().getBuy() == 2
+        return !order.getCheckMore()
+                && order.getPromotion().getBuy() == 2
                 && order.getPromotion().getGet() == 1
                 && order.getQuantity() % 3 == 0
                 && promotionDiscountPolicy.isInDate(order.getPromotion());
@@ -65,7 +57,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public boolean isOnePlusOneMore(Order order) {
-        return order.getPromotion().getBuy() == 1
+        return !order.getCheckMore()
+                && order.getPromotion().getBuy() == 1
                 && order.getPromotion().getGet() == 1
                 && order.getQuantity() % 2 == 1
                 && promotionDiscountPolicy.isInDate(order.getPromotion())
@@ -74,7 +67,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public boolean isOnePlusOne(Order order) {
-        return order.getPromotion().getBuy() == 1
+        return !order.getCheckMore()
+                && order.getPromotion().getBuy() == 1
                 && order.getPromotion().getGet() == 1
                 && order.getQuantity() % 2 == 0
                 && promotionDiscountPolicy.isInDate(order.getPromotion());

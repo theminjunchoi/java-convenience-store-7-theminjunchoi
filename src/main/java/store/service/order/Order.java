@@ -8,12 +8,14 @@ public class Order {
     private int quantity;
     private final int productPrice;
     private final Promotion promotion;
+    private boolean checkMore;
 
     public Order(Item item, int quantity, int productPrice, Promotion promotion) {
         this.item = item;
         this.quantity = quantity;
         this.productPrice = productPrice;
         this.promotion = promotion;
+        this.checkMore = false;
     }
 
     public Item getItem() {
@@ -38,5 +40,13 @@ public class Order {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public boolean getCheckMore() {
+        return checkMore;
+    }
+
+    public void setCheckMore(boolean checkMore) {
+        this.checkMore = checkMore;
     }
 }

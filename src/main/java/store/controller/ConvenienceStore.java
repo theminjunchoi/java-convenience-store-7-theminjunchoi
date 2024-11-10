@@ -7,7 +7,9 @@ import static store.exception.ErrorMessage.OVER_QUANTITY;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
 import store.model.product.Item;
+import store.model.product.Promotion;
 import store.model.repository.ItemRepository;
 import store.model.repository.TextItemRepository;
 import store.service.order.Order;
@@ -81,8 +83,71 @@ public class ConvenienceStore {
             String name = parts[0];
             int quantity = Integer.parseInt(parts[1]);
             checkNameAndQuantity(name, quantity);
-            Order newOrder = orderService.createOrder(name, quantity);
-            orders.add(newOrder);
+
+            List<Item> items = orderService.findByName(name);
+            if (items.size() > 1) {
+                int promotionCount = items.stream()
+                        .filter(item -> !item.getPromotion().getName().equals("null"))
+                        .mapToInt(Item::getQuantity)
+                        .sum();
+                if (quantity > promotionCount) {
+                    Promotion promotion = findPromotion(items, false);
+                    Promotion nullPromotion = findPromotion(items, true);
+                    Order noPromotionorder = orderService.createOrderWithPromotion(name, quantity, promotion);
+                    noPromotionorder.setCheckMore(true);
+                    orders.add(noPromotionorder);
+                    Order promotionOrder = orderService.createOrderWithPromotion(name, quantity-promotionCount, nullPromotion);
+                    promotionOrder.setCheckMore(true);
+                    promotionOrders.add(promotionOrder);
+
+                    assert promotion != null;
+                    if (promotion.getBuy()==2 && promotion.getGet()==1) {
+                        countMaxPromotion(promotionCount, 3, quantity, name);
+
+                    } else if (promotion.getBuy()==1 && promotion.getGet()==1) {
+                        countMaxPromotion(promotionCount, 2, quantity, name);
+                    }
+                } else if (quantity <= promotionCount) {
+                    Order newOrder = orderService.createOrder(name, quantity);
+                    orders.add(newOrder);
+                }
+            }
+
+            if (items.size() == 1) {
+                Order newOrder = orderService.createOrder(name, quantity);
+                orders.add(newOrder);
+            }
+        }
+    }
+
+    private Promotion findPromotion(List<Item> items, boolean isNull) {
+        if (isNull) {
+            return items.stream()
+                    .map(Item::getPromotion)
+                    .filter(promotion -> promotion.getName().equals("null"))
+                    .findAny()
+                    .orElse(null);
+        } else {
+            return items.stream()
+                    .map(Item::getPromotion)
+                    .filter(promotion -> !promotion.getName().equals("null"))
+                    .findAny()
+                    .orElse(null);
+        }
+    }
+
+    private void countMaxPromotion(int promotionCount, int divisor, int quantity, String name) {
+        int maxPromotion = IntStream.range(1, promotionCount)
+                .filter(num -> num % divisor == 0)
+                .max()
+                .orElse(1);
+        int noPromotions = quantity - maxPromotion;
+        String answer = inputView.getNotDiscount(name, noPromotions);
+        if (!answer.equals("Y") && !answer.equals("N")) {
+            outputView.printErrorMessage(INVALID_ANSWER.getMessage());
+            purchaseItem();
+        } else if (answer.equals("N")) {
+            purchaseItem();
         }
     }
 
