@@ -69,6 +69,14 @@ class ApplicationTest extends NsTest {
         });
     }
 
+    @Test
+    void 존재하지_않는_상품_테스트() {
+        assertSimpleTest(() -> {
+            runException("[치킨-10]", "N", "N");
+            assertThat(output()).contains("[ERROR] 존재하지 않는 상품입니다. 다시 입력해 주세요.");
+        });
+    }
+
     @Override
     public void runMain() {
         Application.main(new String[]{});
