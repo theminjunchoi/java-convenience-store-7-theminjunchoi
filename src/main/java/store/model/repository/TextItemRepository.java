@@ -25,9 +25,44 @@ public class TextItemRepository implements ItemRepository {
             List<String> stocks = Files.readAllLines(productsPath);
             for (int i = 1; i < stocks.size(); i++) {
                 add(makeItem(stocks.get(i)));
+                if (i != stocks.size()-1) {
+                    checkZeroQuantity(stocks.get(i), stocks.get(i+1));
+                } else if (i == stocks.size()-1) {
+                    checkLastLine(stocks.get(i));
+                }
+
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private void checkLastLine(String line) {
+        String[] nowValues = line.split(",");
+        if (!nowValues[3].equals("null")) {
+            String name = nowValues[0];
+            int price = Integer.parseInt(nowValues[1]);
+            int quantity = 0;
+            Promotion promotion = promotions.stream()
+                    .filter(findPromotion -> findPromotion.getName().equals("null"))
+                    .findFirst()
+                    .orElse(null);
+            add(organizeItem(name, price, quantity, promotion));
+        }
+    }
+
+    private void checkZeroQuantity(String line, String nextLine) {
+        String[] nowValues = line.split(",");
+        String[] nextValues = nextLine.split(",");
+        if (!nowValues[3].equals("null") && !nowValues[0].equals(nextValues[0])) {
+            String name = nowValues[0];
+            int price = Integer.parseInt(nowValues[1]);
+            int quantity = 0;
+            Promotion promotion = promotions.stream()
+                    .filter(findPromotion -> findPromotion.getName().equals("null"))
+                    .findFirst()
+                    .orElse(null);
+            add(organizeItem(name, price, quantity, promotion));
         }
     }
 
