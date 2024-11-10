@@ -1,8 +1,8 @@
 package store.service.order;
 
 import java.util.List;
-import store.model.product.Item;
-import store.model.product.Promotion;
+import store.model.item.Item;
+import store.model.item.Promotion;
 
 public interface OrderService {
     Order createOrder(String name, int quantity);

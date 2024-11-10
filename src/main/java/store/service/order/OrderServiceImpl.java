@@ -1,8 +1,8 @@
 package store.service.order;
 
 import java.util.List;
-import store.model.product.Item;
-import store.model.product.Promotion;
+import store.model.item.Item;
+import store.model.item.Promotion;
 import store.model.repository.ItemRepository;
 import store.model.repository.TextItemRepository;
 import store.service.discount.DiscountPolicy;

@@ -6,8 +6,8 @@ import java.nio.file.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import store.model.product.Item;
-import store.model.product.Promotion;
+import store.model.item.Item;
+import store.model.item.Promotion;
 import store.service.order.Order;
 
 public class TextItemRepository implements ItemRepository {

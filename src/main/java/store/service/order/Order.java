@@ -1,7 +1,7 @@
 package store.service.order;
 
-import store.model.product.Item;
-import store.model.product.Promotion;
+import store.model.item.Item;
+import store.model.item.Promotion;
 
 public class Order {
     private final Item item;

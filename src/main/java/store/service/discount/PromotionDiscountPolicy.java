@@ -3,7 +3,7 @@ package store.service.discount;
 import camp.nextstep.edu.missionutils.DateTimes;
 import java.time.LocalDateTime;
 import java.util.List;
-import store.model.product.Promotion;
+import store.model.item.Promotion;
 import store.service.order.Order;
 
 public class PromotionDiscountPolicy implements DiscountPolicy {

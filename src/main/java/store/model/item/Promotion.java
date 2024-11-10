@@ -1,4 +1,4 @@
-package store.model.product;
+package store.model.item;
 
 import java.time.LocalDate;
 

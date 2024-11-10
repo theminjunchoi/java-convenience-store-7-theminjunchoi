@@ -8,8 +8,8 @@ import static store.exception.ErrorMessage.OVER_QUANTITY;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
-import store.model.product.Item;
-import store.model.product.Promotion;
+import store.model.item.Item;
+import store.model.item.Promotion;
 import store.model.repository.ItemRepository;
 import store.model.repository.TextItemRepository;
 import store.service.order.Order;
@@ -83,7 +83,6 @@ public class ConvenienceStore {
             String name = parts[0];
             int quantity = Integer.parseInt(parts[1]);
             checkNameAndQuantity(name, quantity);
-
             List<Item> items = orderService.findByName(name);
             checkItemSize(items, quantity, name);
         }

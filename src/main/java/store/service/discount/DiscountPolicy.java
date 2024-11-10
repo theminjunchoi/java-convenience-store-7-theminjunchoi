@@ -1,7 +1,7 @@
 package store.service.discount;
 
 import java.util.List;
-import store.model.product.Promotion;
+import store.model.item.Promotion;
 import store.service.order.Order;
 
 public interface DiscountPolicy {

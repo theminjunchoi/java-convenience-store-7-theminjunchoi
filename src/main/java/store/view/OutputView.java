@@ -2,7 +2,7 @@ package store.view;
 
 import java.text.NumberFormat;
 import java.util.List;
-import store.model.product.Item;
+import store.model.item.Item;
 import store.service.order.Order;
 
 public class OutputView {
