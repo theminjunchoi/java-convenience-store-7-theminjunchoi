@@ -85,38 +85,46 @@ public class ConvenienceStore {
             checkNameAndQuantity(name, quantity);
 
             List<Item> items = orderService.findByName(name);
-            if (items.size() > 1) {
-                int promotionCount = items.stream()
-                        .filter(item -> !item.getPromotion().getName().equals("null"))
-                        .mapToInt(Item::getQuantity)
-                        .sum();
-                if (quantity > promotionCount) {
-                    Promotion promotion = findPromotion(items, false);
-                    Promotion nullPromotion = findPromotion(items, true);
-                    Order noPromotionorder = orderService.createOrderWithPromotion(name, quantity, promotion);
-                    noPromotionorder.setCheckMore(true);
-                    orders.add(noPromotionorder);
-                    Order promotionOrder = orderService.createOrderWithPromotion(name, quantity-promotionCount, nullPromotion);
-                    promotionOrder.setCheckMore(true);
-                    promotionOrders.add(promotionOrder);
+            checkItemSize(items, quantity, name);
+        }
+    }
 
-                    assert promotion != null;
-                    if (promotion.getBuy()==2 && promotion.getGet()==1) {
-                        countMaxPromotion(promotionCount, 3, quantity, name);
-
-                    } else if (promotion.getBuy()==1 && promotion.getGet()==1) {
-                        countMaxPromotion(promotionCount, 2, quantity, name);
-                    }
-                } else if (quantity <= promotionCount) {
-                    Order newOrder = orderService.createOrder(name, quantity);
-                    orders.add(newOrder);
-                }
-            }
-
-            if (items.size() == 1) {
+    private void checkItemSize(List<Item> items, int quantity, String name) {
+        if (items.size() > 1) {
+            int promotionCount = items.stream()
+                    .filter(item -> !item.getPromotion().getName().equals("null"))
+                    .mapToInt(Item::getQuantity)
+                    .sum();
+            if (quantity > promotionCount) {
+                purchaseBoth(items, name, quantity, promotionCount);
+            } else if (quantity <= promotionCount) {
                 Order newOrder = orderService.createOrder(name, quantity);
                 orders.add(newOrder);
             }
+        } else if (items.size() == 1) {
+            Order newOrder = orderService.createOrder(name, quantity);
+            orders.add(newOrder);
+        }
+    }
+
+    private void purchaseBoth(List<Item> items, String name, int quantity, int promotionCount) {
+        Promotion promotion = findPromotion(items, false);
+        Promotion nullPromotion = findPromotion(items, true);
+        Order noPromotionorder = orderService.createOrderWithPromotion(name, quantity, promotion);
+        noPromotionorder.setCheckMore(true);
+        orders.add(noPromotionorder);
+        Order promotionOrder = orderService.createOrderWithPromotion(name, quantity - promotionCount, nullPromotion);
+        promotionOrder.setCheckMore(true);
+        promotionOrders.add(promotionOrder);
+        separatePromotion(name, quantity, promotionCount, promotion);
+    }
+
+    private void separatePromotion(String name, int quantity, int promotionCount, Promotion promotion) {
+        if (promotion.getBuy()==2 && promotion.getGet()==1) {
+            countMaxPromotion(promotionCount, 3, quantity, name);
+
+        } else if (promotion.getBuy()==1 && promotion.getGet()==1) {
+            countMaxPromotion(promotionCount, 2, quantity, name);
         }
     }
 

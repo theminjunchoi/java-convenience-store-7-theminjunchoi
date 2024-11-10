@@ -40,14 +40,7 @@ public class TextItemRepository implements ItemRepository {
     private void checkLastLine(String line) {
         String[] nowValues = line.split(",");
         if (!nowValues[3].equals("null")) {
-            String name = nowValues[0];
-            int price = Integer.parseInt(nowValues[1]);
-            int quantity = 0;
-            Promotion promotion = promotions.stream()
-                    .filter(findPromotion -> findPromotion.getName().equals("null"))
-                    .findFirst()
-                    .orElse(null);
-            add(organizeItem(name, price, quantity, promotion));
+            addZeroQuantityItem(nowValues);
         }
     }
 
@@ -55,15 +48,19 @@ public class TextItemRepository implements ItemRepository {
         String[] nowValues = line.split(",");
         String[] nextValues = nextLine.split(",");
         if (!nowValues[3].equals("null") && !nowValues[0].equals(nextValues[0])) {
-            String name = nowValues[0];
-            int price = Integer.parseInt(nowValues[1]);
-            int quantity = 0;
-            Promotion promotion = promotions.stream()
-                    .filter(findPromotion -> findPromotion.getName().equals("null"))
-                    .findFirst()
-                    .orElse(null);
-            add(organizeItem(name, price, quantity, promotion));
+            addZeroQuantityItem(nowValues);
         }
+    }
+
+    private void addZeroQuantityItem(String[] nowValues) {
+        String name = nowValues[0];
+        int price = Integer.parseInt(nowValues[1]);
+        int quantity = 0;
+        Promotion promotion = promotions.stream()
+                .filter(findPromotion -> findPromotion.getName().equals("null"))
+                .findFirst()
+                .orElse(null);
+        add(organizeItem(name, price, quantity, promotion));
     }
 
     private Item makeItem (String line) {
@@ -162,18 +159,10 @@ public class TextItemRepository implements ItemRepository {
         for (Order order : orders) {
             int remainingQuantity = order.getQuantity();
             String itemName = order.getItem().getName();
-
             remainingQuantity = reduceQuantity(itemName, remainingQuantity, false);
-
             if (remainingQuantity > 0) {
                 remainingQuantity = reduceQuantity(itemName, remainingQuantity, true);
             }
-
-
-//            store.stream()
-//                .filter(item -> item.getName().equals(order.getItem().getName()))
-//                .findFirst()
-//                .ifPresent(item -> item.reduceQuantity(order.getQuantity()));
         }
     }
 

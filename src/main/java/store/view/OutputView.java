@@ -3,7 +3,6 @@ package store.view;
 import java.text.NumberFormat;
 import java.util.List;
 import store.model.product.Item;
-import store.model.product.Promotion;
 import store.service.order.Order;
 
 public class OutputView {
@@ -27,12 +26,7 @@ public class OutputView {
     public void printItem(List<Item> store) {
         NumberFormat moneyFormat = NumberFormat.getInstance();
         for (Item item : store) {
-            String quantityInfo;
-            if (item.getQuantity() == 0) {
-                quantityInfo = "재고 없음";
-            } else {
-                quantityInfo = item.getQuantity() + "개";
-            }
+            String quantityInfo = getQuantityInfo(item);
             String promotion = item.getPromotion().getName();
             if (promotion.equals("null")) {
                 promotion = "";
@@ -40,6 +34,13 @@ public class OutputView {
             System.out.printf(ITEM_CONTENTS, item.getName(), moneyFormat.format(item.getPrice()), quantityInfo, promotion);
         }
         System.out.print(System.lineSeparator());
+    }
+
+    private static String getQuantityInfo(Item item) {
+        if (item.getQuantity() == 0) {
+            return "재고 없음";
+        }
+        return item.getQuantity() + "개";
     }
 
     public void printErrorMessage(String errorMessage) {
