@@ -174,6 +174,7 @@ public class ConvenienceStore {
         int totalQuantity = items.stream().mapToInt(Item::getQuantity).sum();
         if (quantity > totalQuantity) {
             outputView.printErrorMessage(OVER_QUANTITY.getMessage());
+            initializeOrder();
             purchaseItem();
         }
     }
