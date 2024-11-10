@@ -12,9 +12,9 @@ import store.service.order.Order;
 
 public class TextItemRepository implements ItemRepository {
     private static final Path productsPath = Paths.get("src/main/resources/products.md");
-    private static  List<Item> store;
+    private static List<Item> store;
     private static final Path promotionsPath = Paths.get("src/main/resources/promotions.md");
-    private static  List<Promotion> promotions;
+    private static List<Promotion> promotions;
 
     @Override
     public void createRepository() {
@@ -109,6 +109,8 @@ public class TextItemRepository implements ItemRepository {
         store.add(item);
     }
 
+    // 개발 초기, 프로그램 실행 후 구매한만큼이 products.md에도 반영을 해야하는 줄 알고 만든 메소드
+    // 지금은 사용 안함.
     @Override
     public void save() {
         try(BufferedWriter writer = Files.newBufferedWriter(productsPath)) {

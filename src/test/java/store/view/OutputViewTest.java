@@ -19,7 +19,7 @@ class OutputViewTest extends NsTest {
     }
 
     @Test
-    @DisplayName("Repository 현황 출력하기")
+    @DisplayName("재고가 0인 아이템도 재고 없음으로 출력하기")
     void printProduct_Test() {
         assertSimpleTest(() -> {
             outputView.printItem(textProductRepository.getStore());
