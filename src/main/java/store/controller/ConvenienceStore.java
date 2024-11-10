@@ -226,29 +226,24 @@ public class ConvenienceStore {
     }
 
     private void askTwoPlusOne(Order order) {
-        String answer = inputView.getMoreItemAndCount(order.getName());
-        if (!answer.equals("Y") && !answer.equals("N")) {
-            throw new IllegalArgumentException(INVALID_ANSWER.getMessage());
-        } else if (answer.equals("Y")) {
-            orders.stream()
-                    .filter(findOrder -> findOrder.getName().equals(order.getName()))
-                    .findFirst()
-                    .ifPresent(findOrder -> findOrder.setQuantity(findOrder.getQuantity() + 1));
-            promotionOrders.add(new Order(order.getItem(), order.getQuantity()/3, order.getProductPrice(), order.getPromotion()));
-        }
+        askPromotionConfirmation(order, 3);
     }
 
     private void askOnePlusOne(Order order) {
+        askPromotionConfirmation(order, 2);
+    }
+
+    private void askPromotionConfirmation(Order order, int promotionDivider) {
         String answer = inputView.getMoreItemAndCount(order.getName());
         if (!answer.equals("Y") && !answer.equals("N")) {
             throw new IllegalArgumentException(INVALID_ANSWER.getMessage());
-        } else if (answer.equals("Y")) {
+        }
+        if (answer.equals("Y")) {
             orders.stream()
                     .filter(findOrder -> findOrder.getName().equals(order.getName()))
                     .findFirst()
                     .ifPresent(findOrder -> findOrder.setQuantity(findOrder.getQuantity() + 1));
-            promotionOrders.add(new Order(order.getItem(), order.getQuantity()/2, order.getProductPrice(), order.getPromotion()));
+            promotionOrders.add(new Order(order.getItem(), order.getQuantity() / promotionDivider, order.getProductPrice(), order.getPromotion()));
         }
     }
-
 }
