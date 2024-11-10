@@ -62,7 +62,7 @@ class ApplicationTest extends NsTest {
     }
 
     @Test
-    void 여러_개의_일반_상품_구매2() {
+    void 일반과_프로모션_상품_구매() {
         assertSimpleTest(() -> {
             run("[콜라-6],[사이다-2],[물-2]", "Y", "Y", "N");
             assertThat(output().replaceAll("\\s", "")).contains("내실돈6,700");

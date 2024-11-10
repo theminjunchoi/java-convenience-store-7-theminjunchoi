@@ -17,8 +17,8 @@ public class OutputView {
     private final static String PROMOTION_ORDER_FORMAT = "%-16s %-7d\n";
     private final static String TOTAL_PRICE_FORMAT = "%-16s %-7d %-7s\n";
     private final static String PROMOTION_PRICE_FORMAT = "%-23s -%-7s\n";
-    private final static String MEMBERSHIP_PRICE_FORMAT = "%-23s -%-7s\n";
-    private final static String FINAL_PRICE_FORMAT = "%-23s %-7s\n";
+    private final static String MEMBERSHIP_PRICE_FORMAT = "%-22s -%-7s\n";
+    private final static String FINAL_PRICE_FORMAT = "%-24s %-7s\n";
 
     public void printWelcome() {
         System.out.println(WELCOME);
