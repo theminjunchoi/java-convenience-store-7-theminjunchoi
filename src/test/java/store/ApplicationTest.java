@@ -77,6 +77,14 @@ class ApplicationTest extends NsTest {
         });
     }
 
+    @Test
+    void 구매한만큼_차감_반영_테스트() {
+        assertSimpleTest(() -> {
+            runException("[콜라-3]", "N", "Y");
+            assertThat(output()).contains("콜라 1,000원 7개 탄산2+1");
+        });
+    }
+
     @Override
     public void runMain() {
         Application.main(new String[]{});
