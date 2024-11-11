@@ -56,5 +56,53 @@
   
 ## 개발 간 문제 상황
 - 재고 관리를 메모리 상에서만 해줘야하나? 아니면 products.md에서도 반영을 해줘야하나?
-  - 처음에는 후자로 이해를 했다. </br>각 구매가 끝날 때마다 구매한 만큼 당연히 이어지는 구매에서도 반영을 해주고, 마찬가지로 이걸 products.md에서도 반영을 해줬다. </br>즉 실행을 할 때마다, 구매를 하면 그 만큼이 products.md에서도 줄어들었다.
-  - 모든 기능을 구현 후, ApplicationTest의 method 단위로 테스트를 돌릴 때는 문제가 없었지만, class 단위로 한 번에 돌리니까 문제가 발생했다.</br>문제에서 요구하는 건, 이어지는 구매까지만 이전 구매를 반영해주고, 즉 메모리 상에서만 반영해주고 products.md는 반영을 해줄 필요가 없는 것 같다.
+  - 처음에는 후자로 이해를 했다. </br>각 구매가 끝날 때마다 구매한 만큼 당연히 이어지는 구매에서도 반영을 해주고, 마찬가지로 이걸 products.md에서도 반영을 해줬다. 즉 실행을 할 때마다, 구매를 하면 그 만큼이 products.md에서도 줄어들었다.
+  - 모든 기능을 구현 후, ApplicationTest의 method 단위로 테스트를 돌릴 때는 문제가 없었지만, class 단위로 한 번에 돌리니까 문제가 발생했다.문제에서 요구하는 건, 이어지는 구매까지만 이전 구매를 반영해주고, 즉 메모리 상에서만 반영해주고 products.md는 반영을 해줄 필요가 없는 것 같다.
+
+## 파일 구조
+```bash
+src
+┣ main
+┃ ┣ java
+┃ ┃ ┗ store
+┃ ┃ ┃ ┣ controller
+┃ ┃ ┃ ┃ ┗ ConvenienceStore.java
+┃ ┃ ┃ ┣ exception
+┃ ┃ ┃ ┃ ┗ ErrorMessage.java
+┃ ┃ ┃ ┣ model
+┃ ┃ ┃ ┃ ┣ item
+┃ ┃ ┃ ┃ ┃ ┣ Item.java
+┃ ┃ ┃ ┃ ┃ ┗ Promotion.java
+┃ ┃ ┃ ┃ ┗ repository
+┃ ┃ ┃ ┃ ┃ ┣ ItemRepository.java
+┃ ┃ ┃ ┃ ┃ ┗ TextItemRepository.java
+┃ ┃ ┃ ┣ service
+┃ ┃ ┃ ┃ ┣ discount
+┃ ┃ ┃ ┃ ┃ ┣ DiscountPolicy.java
+┃ ┃ ┃ ┃ ┃ ┣ MembershipDiscountPolicy.java
+┃ ┃ ┃ ┃ ┃ ┗ PromotionDiscountPolicy.java
+┃ ┃ ┃ ┃ ┗ order
+┃ ┃ ┃ ┃ ┃ ┣ Order.java
+┃ ┃ ┃ ┃ ┃ ┣ OrderService.java
+┃ ┃ ┃ ┃ ┃ ┗ OrderServiceImpl.java
+┃ ┃ ┃ ┣ view
+┃ ┃ ┃ ┃ ┣ InputView.java
+┃ ┃ ┃ ┃ ┗ OutputView.java
+┃ ┃ ┃ ┗ Application.java
+┃ ┗ resources
+┃ ┃ ┣ products.md
+┃ ┃ ┗ promotions.md
+┗ test
+┃ ┗ java
+┃ ┃ ┗ store
+┃ ┃ ┃ ┣ model
+┃ ┃ ┃ ┃ ┗ repository
+┃ ┃ ┃ ┃ ┃ ┗ TextItemRepositoryTest.java
+┃ ┃ ┃ ┣ service
+┃ ┃ ┃ ┃ ┗ discount
+┃ ┃ ┃ ┃ ┃ ┣ MembershipDiscountPolicyTest.java
+┃ ┃ ┃ ┃ ┃ ┗ PromotionDiscountPolicyTest.java
+┃ ┃ ┃ ┣ view
+┃ ┃ ┃ ┃ ┗ OutputViewTest.java
+┃ ┃ ┃ ┗ ApplicationTest.java
+```
