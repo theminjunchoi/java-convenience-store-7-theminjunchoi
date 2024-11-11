@@ -91,20 +91,26 @@ public class ConvenienceStore {
 
     private void checkItemSize(List<Item> items, int quantity, String name) {
         if (items.size() > 1) {
-            int promotionCount = items.stream()
-                    .filter(item -> !item.getPromotion().getName().equals("null"))
-                    .mapToInt(Item::getQuantity)
-                    .sum();
-            if (quantity > promotionCount) {
-                purchaseBoth(items, name, quantity, promotionCount);
-            } else if (quantity <= promotionCount) {
-                Order newOrder = orderService.createOrder(name, quantity);
-                orders.add(newOrder);
-            }
-        } else if (items.size() == 1) {
-            Order newOrder = orderService.createOrder(name, quantity);
-            orders.add(newOrder);
+            createOrderIfMultipleItems(items, name, quantity);
+        } else {
+            createOrderIfSingleItem(name, quantity);
         }
+    }
+
+    private void createOrderIfMultipleItems(List<Item> items, String name, int quantity) {
+        int promotionCount = items.stream()
+                .filter(item -> !item.getPromotion().getName().equals("null"))
+                .mapToInt(Item::getQuantity)
+                .sum();
+        if (quantity > promotionCount) {
+            purchaseBoth(items, name, quantity, promotionCount);
+        } else {
+            orders.add(orderService.createOrder(name, quantity));
+        }
+    }
+
+    private void createOrderIfSingleItem(String name, int quantity) {
+        orders.add(orderService.createOrder(name, quantity));
     }
 
     private void purchaseBoth(List<Item> items, String name, int quantity, int promotionCount) {
@@ -129,19 +135,11 @@ public class ConvenienceStore {
     }
 
     private Promotion findPromotion(List<Item> items, boolean isNull) {
-        if (isNull) {
-            return items.stream()
-                    .map(Item::getPromotion)
-                    .filter(promotion -> promotion.getName().equals("null"))
-                    .findAny()
-                    .orElse(null);
-        } else {
-            return items.stream()
-                    .map(Item::getPromotion)
-                    .filter(promotion -> !promotion.getName().equals("null"))
-                    .findAny()
-                    .orElse(null);
-        }
+        return items.stream()
+                .map(Item::getPromotion)
+                .filter(promotion -> isNull == promotion.getName().equals("null"))
+                .findAny()
+                .orElse(null);
     }
 
     private void countMaxPromotion(int promotionCount, int divisor, int quantity, String name) {
