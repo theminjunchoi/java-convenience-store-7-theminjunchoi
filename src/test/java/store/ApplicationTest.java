@@ -61,6 +61,30 @@ class ApplicationTest extends NsTest {
         });
     }
 
+    @Test
+    void 일반과_프로모션_상품_구매() {
+        assertSimpleTest(() -> {
+            run("[콜라-6],[사이다-2],[물-2]", "Y", "Y", "N");
+            assertThat(output().replaceAll("\\s", "")).contains("내실돈6,700");
+        });
+    }
+
+    @Test
+    void 존재하지_않는_상품_테스트() {
+        assertSimpleTest(() -> {
+            runException("[치킨-10]", "N", "N");
+            assertThat(output()).contains("[ERROR] 존재하지 않는 상품입니다. 다시 입력해 주세요.");
+        });
+    }
+
+    @Test
+    void 구매한만큼_차감_반영_테스트() {
+        assertSimpleTest(() -> {
+            runException("[콜라-3]", "N", "Y");
+            assertThat(output()).contains("콜라 1,000원 7개 탄산2+1");
+        });
+    }
+
     @Override
     public void runMain() {
         Application.main(new String[]{});
