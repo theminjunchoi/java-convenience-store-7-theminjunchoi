@@ -100,7 +100,16 @@ public class Repository {
     }
 
     public static boolean isInRepository(String itemName) {
-        return repository.contains(itemName);
+        return isContain(itemName);
+    }
+
+    private static boolean isContain(String itemName) {
+        for (Item item : repository) {
+            if (item.getItemName().equals(itemName)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static int getTotalCount(String itemName) {
@@ -115,6 +124,14 @@ public class Repository {
                 .filter(item -> item.getItemName().equals(itemName))
                 .findFirst()
                 .map(Item::getCategory)
+                .get();
+    }
+
+    public Integer findItemPrice(String itemName) {
+        return repository.stream()
+                .filter(item -> item.getItemName().equals(itemName))
+                .map(Item::getPrice)
+                .findFirst()
                 .get();
     }
 
