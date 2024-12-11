@@ -17,6 +17,18 @@ public class Item {
         return itemName;
     }
 
+    public int getPrice() {
+        return price;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public String getCategoryName() {
+        return category.getCategoryName();
+    }
+
     @Override
     public boolean equals(Object obj) {
         if(!(obj instanceof Item)) {

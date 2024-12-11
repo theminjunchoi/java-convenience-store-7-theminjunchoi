@@ -27,6 +27,13 @@ public class Category {
         return category;
     }
 
+    public String getCategoryName() {
+        if (categoryName.equals("null")) {
+            return "";
+        }
+        return categoryName;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if(!(obj instanceof Category)) {

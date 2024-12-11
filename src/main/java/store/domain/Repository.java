@@ -62,12 +62,13 @@ public class Repository {
     }
 
     private void makeItems(List<String> rawItems) {
-        for (int i = 1; i < rawItems.size(); i++) {
+        for (int i = 1; i < rawItems.size()-1; i++) {
             Item item = makeItem(rawItems.get(i));
             repository.add(item);
             checkOnlyPromotionItem(rawItems, i);
         }
-
+        Item item = makeItem(rawItems.get(rawItems.size()-1));
+        repository.add(item);
     }
 
     private Item makeItem(String line) {
@@ -82,7 +83,7 @@ public class Repository {
     private void checkOnlyPromotionItem(List<String> rawItems, int i) {
         String nowItemName = rawItems.get(i).split(",")[0];
         String nowItemCategoryName = rawItems.get(i).split(",")[3];
-        String nextItemName = rawItems.get(i).split(",")[1];
+        String nextItemName = rawItems.get(i+1).split(",")[0];
 
         if (!nowItemCategoryName.equals("null") && !nowItemName.equals(nextItemName)) {
             addZeroItem(rawItems.get(i));
@@ -93,8 +94,12 @@ public class Repository {
         String[] values = line.split(",");
         String itemName = values[0];
         int price = Integer.parseInt(values[1]);
-        int count = Integer.parseInt(values[2]);
+        int count = 0;
         Category category = Category.of(promotions, null);
         repository.add(new Item(itemName, price, count, category));
+    }
+
+    public List<Item> show() {
+        return repository;
     }
 }
