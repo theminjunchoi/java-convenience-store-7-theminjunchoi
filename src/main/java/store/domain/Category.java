@@ -2,6 +2,7 @@ package store.domain;
 
 import camp.nextstep.edu.missionutils.DateTimes;
 import java.time.LocalDate;
+import java.util.List;
 
 public class Category {
     private final String categoryName;
@@ -16,5 +17,22 @@ public class Category {
         this.get = get;
         this.startDate = startDate;
         this.endDate = endDate;
+    }
+
+    public static Category of (List<Category> promotions, String categoryName) {
+        Category category = promotions.stream()
+                .filter(promotion -> promotion.categoryName.equals(categoryName))
+                .findAny()
+                .orElse(null);
+        return category;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(!(obj instanceof Category)) {
+            return false;
+        }
+        Category category = (Category) obj;
+        return category.categoryName.equals(categoryName);
     }
 }

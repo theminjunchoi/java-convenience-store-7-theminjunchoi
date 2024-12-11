@@ -2,13 +2,19 @@ package store.domain;
 
 public class Item {
     private final String itemName;
+    private final int price;
     private final int count;
     private final Category category;
 
-    public Item(String itemName, int count, Category category) {
+    public Item(String itemName, int price, int count, Category category) {
         this.itemName = itemName;
+        this.price = price;
         this.count = count;
         this.category = category;
+    }
+
+    public String getItemName() {
+        return itemName;
     }
 
     @Override
