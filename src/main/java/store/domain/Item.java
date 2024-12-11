@@ -10,4 +10,13 @@ public class Item {
         this.count = count;
         this.category = category;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(!(obj instanceof Item)) {
+            return false;
+        }
+        Item item = (Item) obj;
+        return item.itemName.equals(itemName);
+    }
 }
