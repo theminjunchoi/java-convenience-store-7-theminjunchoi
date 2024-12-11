@@ -19,5 +19,6 @@ public class ConvenienceStore {
         repository.organize();
         outputView.welcome();
         outputView.showRepository(repository.show());
+        inputView.getPurchaseItem();
     }
 }

@@ -9,13 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Repository {
-    private final List<Category> promotions;
-    private final List<Item> repository;
-
-    public Repository() {
-        this.promotions = new ArrayList<>();
-        this.repository = new ArrayList<>();
-    }
+    private static final List<Category> promotions = new ArrayList<>();
+    private static final List<Item> repository = new ArrayList<>();
 
     public void organize() {
         // promotion.md 읽기
@@ -101,5 +96,17 @@ public class Repository {
 
     public List<Item> show() {
         return repository;
+    }
+
+    public static boolean isInRepository(String itemName) {
+        return repository.contains(itemName);
+    }
+
+    public static int getTotalCount(String itemName) {
+        int totalCount = repository.stream()
+                .filter(item -> item.getItemName().equals(itemName))
+                .mapToInt(Item::getCount)
+                .sum();
+        return totalCount;
     }
 }
