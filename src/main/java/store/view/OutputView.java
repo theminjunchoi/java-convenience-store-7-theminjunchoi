@@ -1,6 +1,7 @@
 package store.view;
 
 import java.util.List;
+import java.util.Map;
 import store.domain.Item;
 
 public class OutputView {
@@ -21,5 +22,8 @@ public class OutputView {
             }
             System.out.printf(ITEM_FORMAT, item.getItemName(), item.getPrice(), item.getCount(), item.getCategoryName());
         }
+    }
+
+    public void printReceipt(Map<String, Integer> items, boolean isMembership) {
     }
 }

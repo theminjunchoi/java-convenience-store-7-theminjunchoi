@@ -25,6 +25,10 @@ public class Item {
         return count;
     }
 
+    public Category getCategory() {
+        return category;
+    }
+
     public String getCategoryName() {
         return category.getCategoryName();
     }

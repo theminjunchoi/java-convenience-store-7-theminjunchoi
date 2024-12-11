@@ -34,6 +34,14 @@ public class Category {
         return categoryName;
     }
 
+    public int getBuy() {
+        return buy;
+    }
+
+    public int getGet() {
+        return get;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if(!(obj instanceof Category)) {

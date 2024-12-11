@@ -7,6 +7,7 @@ import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class Repository {
     private static final List<Category> promotions = new ArrayList<>();
@@ -103,10 +104,20 @@ public class Repository {
     }
 
     public static int getTotalCount(String itemName) {
-        int totalCount = repository.stream()
+        return repository.stream()
                 .filter(item -> item.getItemName().equals(itemName))
                 .mapToInt(Item::getCount)
                 .sum();
-        return totalCount;
+    }
+
+    public Category findCategory(String itemName) {
+        return repository.stream()
+                .filter(item -> item.getItemName().equals(itemName))
+                .findFirst()
+                .map(Item::getCategory)
+                .get();
+    }
+
+    public void subtract(Map<String, Integer> items) {
     }
 }
